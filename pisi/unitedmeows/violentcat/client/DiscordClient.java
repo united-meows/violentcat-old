@@ -22,7 +22,6 @@ public class DiscordClient {
 		yWebClient.header("Authorization", "Bot " + token);
 		yWebClient.setUserAgent("cats");
 		String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/users/" + id);
-		System.out.println(jsonResult);
 		JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
 		final String userId = JsonUtil.getString(data.get("id"));
 		final String userName = JsonUtil.getString(data.get("username"));
