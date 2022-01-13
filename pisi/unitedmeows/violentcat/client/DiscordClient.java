@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.violentcat.user.DiscordUser;
+import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.web.YWebClient;
 
 public class DiscordClient {
@@ -23,14 +24,14 @@ public class DiscordClient {
 		String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/users/" + id);
 		System.out.println(jsonResult);
 		JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
-		final String userId = data.get("id").getAsString();
-		final String userName = data.get("username").getAsString();
-		final String avatarId = data.get("avatar").getAsString();
-		final int discriminator = data.get("discriminator").getAsInt();
-		final int publicFlags = data.get("public_flags").getAsInt();
-		final String banner = data.get("banner").getAsString();
-		final String bannerColor = data.get("banner_color").getAsString();
-		final String accent_color = data.get("accent_color").getAsString();
+		final String userId = JsonUtil.getString(data.get("id"));
+		final String userName = JsonUtil.getString(data.get("username"));
+		final String avatarId = JsonUtil.getString(data.get("avatar"));
+		final int discriminator = JsonUtil.getInt(data.get("discriminator"));
+		final int publicFlags = JsonUtil.getInt(data.get("public_flags"));
+		final String banner = JsonUtil.getString(data.get("banner"));
+		final String bannerColor = JsonUtil.getString(data.get("banner_color"));
+		final String accent_color = JsonUtil.getString(data.get("accent_color"));
 
 		return new DiscordUser(userId, userName, avatarId, discriminator, publicFlags, banner, bannerColor, accent_color);
 	}

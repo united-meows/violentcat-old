@@ -1,13 +1,14 @@
 package test.violentcat;
 
+import pisi.unitedmeows.violentcat.client.DiscordClient;
+import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.yystal.web.YWebClient;
 
 public class TestViolentcat {
 
 	public static void main(String[] args) {
-		/* test here */
-		String token = "OTMxMTgwNDA3Njk5OTU5ODc4.YeArVQ.T6qvPT72qSx7k_Wqsn-U5sGfS1E";
-
+		DiscordClient discordClient = new DiscordClient(AccountType.BOT, "OTMxMTgwNDA3Njk5OTU5ODc4.YeArVQ.hpBUz2-nPt_1T1tbad0qrZwjSVQ");
+		System.out.println(discordClient.getUser("903746238447501322").id());
 
 	}
 }

@@ -22,4 +22,8 @@ public class DiscordUser {
 		bannerColor = _bannerColor;
 		accentColor = _accentColor;
 	}
+
+	public String id() {
+		return id;
+	}
 }
