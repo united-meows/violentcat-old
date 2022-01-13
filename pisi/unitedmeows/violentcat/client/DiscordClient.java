@@ -21,16 +21,15 @@ public class DiscordClient {
 		yWebClient.header("Authorization", "Bot " + token);
 		yWebClient.setUserAgent("cats");
 		String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/users/" + id);
-		System.out.println(jsonResult);
 		JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
 		final String userId = data.get("id").getAsString();
 		final String userName = data.get("username").getAsString();
 		final String avatarId = data.get("avatar").getAsString();
 		final int discriminator = data.get("discriminator").getAsInt();
 		final int publicFlags = data.get("public_flags").getAsInt();
-		final String banner = data.get("banner").getAsString();
-		final String bannerColor = data.get("banner_color").getAsString();
-		final String accent_color = data.get("accent_color").getAsString();
+		final String banner = data.get("banner") == null ? "0" : data.get("banner").getAsString();
+		final String bannerColor = data.get("banner_color") == null ? "0" : "a";
+		final String accent_color = data.get("accent_color") == null ? "0" : "a";
 
 		return new DiscordUser(userId, userName, avatarId, discriminator, publicFlags, banner, bannerColor, accent_color);
 	}

@@ -22,4 +22,37 @@ public class DiscordUser {
 		bannerColor = _bannerColor;
 		accentColor = _accentColor;
 	}
+
+
+	public String getId() {
+		return id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public int getDiscriminator() {
+		return discriminator;
+	}
+
+	public int getPublicFlags() {
+		return publicFlags;
+	}
+
+	public String getBanner() {
+		return banner;
+	}
+
+	public String getBannerColor() {
+		return bannerColor;
+	}
+
+	public String getAccentColor() {
+		return accentColor;
+	}
 }
