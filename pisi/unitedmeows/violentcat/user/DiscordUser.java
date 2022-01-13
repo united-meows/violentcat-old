@@ -2,7 +2,7 @@ package pisi.unitedmeows.violentcat.user;
 
 public class DiscordUser {
 
-	private int id;
+	private String id;
 	private String username;
 	private String avatar;
 	private int discriminator;
@@ -11,7 +11,7 @@ public class DiscordUser {
 	private String bannerColor;
 	private String accentColor;
 
-	public DiscordUser(int _id, String _username, String _avatar, int _discriminator, int _publicFlags, String _banner,
+	public DiscordUser(String _id, String _username, String _avatar, int _discriminator, int _publicFlags, String _banner,
 					   String _bannerColor, String _accentColor) {
 		id = _id;
 		username = _username;
