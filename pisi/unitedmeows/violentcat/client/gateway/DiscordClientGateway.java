@@ -7,7 +7,7 @@ import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
-import pisi.unitedmeows.violentcat.client.gateway.signal.SIGNAL;
+import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.HeartbeatAckSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.HeartbeatIntervalSignal;
@@ -22,7 +22,6 @@ import static pisi.unitedmeows.yystal.parallel.Async.*;
 import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Queue;
 
 public class DiscordClientGateway extends WebSocketClient {
@@ -44,7 +43,7 @@ public class DiscordClientGateway extends WebSocketClient {
 	}
 
 	private static void registerSignal(Class<? extends Signal> clazz) {
-		final SIGNAL annotation = clazz.getAnnotation(SIGNAL.class);
+		final RegisterSignal annotation = clazz.getAnnotation(RegisterSignal.class);
 		try {
 			signals.put(annotation.op(), clazz.newInstance());
 		} catch (InstantiationException e) {

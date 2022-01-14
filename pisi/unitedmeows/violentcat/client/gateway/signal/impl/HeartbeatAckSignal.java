@@ -3,10 +3,10 @@ package pisi.unitedmeows.violentcat.client.gateway.signal.impl;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
-import pisi.unitedmeows.violentcat.client.gateway.signal.SIGNAL;
+import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
 
-@SIGNAL(op = Signal.SIGNAL_HEARTBEAT_ACK)
+@RegisterSignal(op = Signal.SIGNAL_HEARTBEAT_ACK)
 public class HeartbeatAckSignal extends Signal {
 
 	@Override

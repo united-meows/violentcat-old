@@ -6,6 +6,6 @@ import java.lang.annotation.Target;
 
 @Target({java.lang.annotation.ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SIGNAL {
+public @interface RegisterSignal {
 	int op();
 }
