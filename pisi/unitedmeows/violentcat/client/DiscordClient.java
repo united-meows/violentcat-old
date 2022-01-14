@@ -5,9 +5,11 @@ import com.google.gson.JsonParser;
 import pisi.unitedmeows.violentcat.client.gateway.DiscordClientGateway;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.IdentifySignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.PresenceUpdateSignal;
+import pisi.unitedmeows.violentcat.holders.ApplicationInfo;
 import pisi.unitedmeows.violentcat.holders.Presence;
 import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.violentcat.user.DiscordUser;
+import pisi.unitedmeows.violentcat.user.SelfUser;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.clazz.prop;
 import pisi.unitedmeows.yystal.utils.Capsule;
@@ -26,6 +28,10 @@ public class DiscordClient {
 
 	/* create self user info holder class */
 	public Presence presence;
+
+	public SelfUser selfUser;
+
+	public ApplicationInfo applicationInfo;
 
 	public DiscordClient(AccountType _accountType, String _token) {
 		accountType = _accountType;
