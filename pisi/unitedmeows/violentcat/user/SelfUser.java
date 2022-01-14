@@ -20,4 +20,6 @@ public class SelfUser {
         discriminator = _discriminator;
     }
 
+
+
 }

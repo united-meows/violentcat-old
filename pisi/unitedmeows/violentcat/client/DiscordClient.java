@@ -27,11 +27,11 @@ public class DiscordClient {
 	protected DiscordClientGateway clientGateway;
 
 	/* create self user info holder class */
-	public Presence presence;
+	private Presence presence;
 
-	public SelfUser selfUser;
+	private SelfUser selfUser;
 
-	public ApplicationInfo applicationInfo;
+	private ApplicationInfo applicationInfo;
 
 	public DiscordClient(AccountType _accountType, String _token) {
 		accountType = _accountType;
@@ -67,6 +67,22 @@ public class DiscordClient {
 
 	public void setPresence(Presence presence) {
 		clientGateway.send(new PresenceUpdateSignal(presence));
+	}
+
+
+
+	public SelfUser getSelfUser() {
+		return selfUser;
+	}
+
+	@Deprecated
+	public void setSelfUser(SelfUser selfUser) {
+		this.selfUser = selfUser;
+	}
+
+	@Deprecated
+	public void setApplicationInfo(ApplicationInfo applicationInfo) {
+		this.applicationInfo = applicationInfo;
 	}
 
 	public void login() {

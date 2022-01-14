@@ -8,4 +8,12 @@ public class ApplicationInfo {
         applicationId = _applicationId;
         applicationFlags = _applicationFlags;
     }
+
+    public int getApplicationFlags() {
+        return applicationFlags;
+    }
+
+    public int getApplicationId() {
+        return applicationId;
+    }
 }

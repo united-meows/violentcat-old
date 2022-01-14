@@ -6,6 +6,7 @@ import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
 import pisi.unitedmeows.violentcat.holders.ApplicationInfo;
 import pisi.unitedmeows.violentcat.user.SelfUser;
+import pisi.unitedmeows.violentcat.utils.JsonUtil;
 
 @RegisterSignal(op = Signal.SIGNAL_READY)
 public class ReadySignal extends Signal {
@@ -13,21 +14,21 @@ public class ReadySignal extends Signal {
     @Override
     public void read(DiscordClient client, JsonObject data) {
         boolean verified = data.getAsJsonObject("user").get("verified").getAsBoolean();
-        String username = data.getAsJsonObject("user").get("username").getAsString();
+        String username = JsonUtil.getString(data.getAsJsonObject("user").get("username"));
         boolean mfa = data.getAsJsonObject("user").get("mfa_enabled").getAsBoolean();
-        int id = data.getAsJsonObject("user").get("id").getAsInt();
-        int flags = data.getAsJsonObject("user").get("flags").getAsInt();
-        String email = data.getAsJsonObject("user").get("email").getAsString();
-        int discriminator = data.getAsJsonObject("user").get("discriminator").getAsInt();
+        int id = JsonUtil.getInt(data.getAsJsonObject("user").get("id"));
+        int flags = JsonUtil.getInt(data.getAsJsonObject("user").get("flags"));
+        String email = JsonUtil.getString(data.getAsJsonObject("user").get("email"));
+        int discriminator = JsonUtil.getInt(data.getAsJsonObject("user").get("discriminator"));
         boolean bot = data.getAsJsonObject("user").get("bot").getAsBoolean();
-        String avatar = data.getAsJsonObject("user").get("avatar").getAsString();
+        String avatar = JsonUtil.getString(data.getAsJsonObject("user").get("avatar"));
 
-        client.selfUser = new SelfUser(verified, mfa, bot, username, email, avatar, id, flags, discriminator);
+        client.setSelfUser(new SelfUser(verified, mfa, bot, username, email, avatar, id, flags, discriminator));
 
-        int applicationId = data.getAsJsonObject("application").get("id").getAsInt();
-        int applicationFlags = data.getAsJsonObject("application").get("flags").getAsInt();
+        int applicationId = JsonUtil.getInt(data.getAsJsonObject("application").get("id"));
+        int applicationFlags = JsonUtil.getInt(data.getAsJsonObject("application").get("flags"));
 
-       client.applicationInfo = new ApplicationInfo(applicationId, applicationFlags);
+       client.setApplicationInfo(new ApplicationInfo(applicationId, applicationFlags));
     }
 
     @Override
