@@ -2,19 +2,36 @@ package pisi.unitedmeows.violentcat.client;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import pisi.unitedmeows.violentcat.client.gateway.DiscordClientGateway;
+import pisi.unitedmeows.violentcat.client.gateway.signal.impl.IdentifySignal;
+import pisi.unitedmeows.violentcat.holders.Presence;
 import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.violentcat.user.DiscordUser;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
+import pisi.unitedmeows.yystal.clazz.prop;
+import pisi.unitedmeows.yystal.utils.Capsule;
+import pisi.unitedmeows.yystal.utils.kThread;
 import pisi.unitedmeows.yystal.web.YWebClient;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class DiscordClient {
 
 	protected AccountType accountType;
 	protected String token;
 
+	protected DiscordClientGateway clientGateway;
+
+	/* create self user info holder class */
+	public Presence presence;
+
 	public DiscordClient(AccountType _accountType, String _token) {
 		accountType = _accountType;
 		token = _token;
+		try {
+			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
+		} catch (Exception ex) {}
 	}
 
 	public DiscordUser getUser(String id) {
@@ -36,8 +53,18 @@ public class DiscordClient {
 	}
 
 	/* soon .D */
-	public void login() {
+	public void login(Capsule optional) {
+		clientGateway.connect();
 
+		clientGateway.login(token, optional);
+	}
+
+	public void login() {
+		login(Capsule.of());
+	}
+
+	public DiscordClientGateway clientGateway() {
+		return clientGateway;
 	}
 
 	public AccountType accountType() {
