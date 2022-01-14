@@ -3,6 +3,7 @@ package pisi.unitedmeows.violentcat.holders;
 public class Presence {
 
 	protected String statusMessage;
+	protected String url;
 	protected Type type;
 	protected Status status = Status.ONLINE;
 
@@ -10,6 +11,19 @@ public class Presence {
 		type = _type;
 		statusMessage = _statusMessage;
 		status = _status != null ? _status : status;
+	}
+
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	public static Presence of(Type _type, String _message) {
@@ -33,7 +47,7 @@ public class Presence {
 	}
 
 	public static Presence listening(String listeningTo) {
-		return new Presence(null, Type.WATCHING, listeningTo);
+		return new Presence(null, Type.LISTENING, listeningTo);
 	}
 
 	public Presence setStatus(Status _status) {
@@ -42,11 +56,22 @@ public class Presence {
 	}
 
 	public enum Type {
-		PLAYING,
-		LISTENING,
-		STREAMING,
-		WATCHING,
-		NOTHING;
+		PLAYING(0),
+		STREAMING(1),
+		LISTENING(2),
+		WATCHING(3),
+		CUSTOM(4),
+		COMPETING(5),
+		NOTHING(2173);
+
+		int id;
+		Type(int _id) {
+			id = _id;
+		}
+
+		public int getId() {
+			return id;
+		}
 	}
 
 	public enum Status {

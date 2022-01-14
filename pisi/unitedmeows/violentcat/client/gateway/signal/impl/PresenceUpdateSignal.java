@@ -6,16 +6,10 @@ import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
 
+
 @RegisterSignal(op = Signal.SIGNAL_PRESENCE)
 public class PresenceUpdateSignal extends Signal {
-    private int type, since;
-    private String message;
 
-    public PresenceUpdateSignal(int _type, int _since, String _message) {
-        this.type = _type;
-        this.since = _since;
-        this.message = _message;
-    }
 
     @Override
     public void read(DiscordClient client, JsonObject data) {
@@ -32,12 +26,15 @@ public class PresenceUpdateSignal extends Signal {
         JsonArray activities = new JsonArray();
         JsonObject presence = new JsonObject();
         presence.addProperty("name", message);
+        if(url != null && !url.isEmpty()) {
+            presence.addProperty("url", url);
+        }
         presence.addProperty("type", type);
         activities.add(presence);
         data.add("activities", activities);
 
-        data.addProperty("status", "online");
-        data.addProperty("afk", false);
+        data.addProperty("status", status);
+        data.addProperty("afk", afk);
 
         main.add("d", data);
         return main;
