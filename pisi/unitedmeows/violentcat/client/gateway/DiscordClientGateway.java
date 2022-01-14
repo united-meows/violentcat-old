@@ -7,7 +7,7 @@ import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
-import pisi.unitedmeows.violentcat.client.gateway.signal.ReadySignal;
+import pisi.unitedmeows.violentcat.client.gateway.signal.impl.ReadySignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.HeartbeatAckSignal;

@@ -13,6 +13,10 @@ public class Presence {
 		status = _status != null ? _status : status;
 	}
 
+	protected void setUrl(String _url) {
+		url = _url;
+	}
+
 
 	public Status getStatus() {
 		return status;
@@ -24,6 +28,10 @@ public class Presence {
 
 	public Type getType() {
 		return type;
+	}
+
+	public String getUrl() {
+		return url;
 	}
 
 	public static Presence of(Type _type, String _message) {
@@ -42,8 +50,11 @@ public class Presence {
 		return new Presence(null, Type.WATCHING, message);
 	}
 
-	public static Presence streaming(String streamLink) {
-		return new Presence(null, Type.STREAMING, streamLink);
+	public static Presence streaming(String message, String url) {
+		final Presence presence =  new Presence(null, Type.STREAMING, message);
+		presence.setUrl(url);
+		return presence;
+
 	}
 
 	public static Presence listening(String listeningTo) {

@@ -56,12 +56,11 @@ public class DiscordClient {
 	/* soon .D */
 	public void login(Capsule optional) {
 		clientGateway.connect();
-
 		clientGateway.login(token, optional);
 	}
 
 	public void setPresence(Presence presence) {
-		clientGateway.send(new PresenceUpdateSignal(presence.getType().getId(), 99999, 2, presence.getStatusMessage(), null, false));
+		clientGateway.send(new PresenceUpdateSignal(presence));
 	}
 
 	public void login() {
