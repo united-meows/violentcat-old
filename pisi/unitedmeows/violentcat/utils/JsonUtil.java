@@ -12,4 +12,8 @@ public class JsonUtil {
 	public static int getInt(JsonElement jsonElement) {
 		return jsonElement == JsonNull.INSTANCE ? -1 : jsonElement.getAsInt();
 	}
+
+	public static boolean getBoolean(JsonElement jsonElement) {
+		return jsonElement == JsonNull.INSTANCE ? null : jsonElement.getAsBoolean();
+	}
 }

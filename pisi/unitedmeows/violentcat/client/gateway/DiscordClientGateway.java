@@ -7,12 +7,9 @@ import com.google.gson.JsonParser;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
-import pisi.unitedmeows.violentcat.client.gateway.signal.impl.ReadySignal;
+import pisi.unitedmeows.violentcat.client.gateway.signal.impl.*;
 import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
-import pisi.unitedmeows.violentcat.client.gateway.signal.impl.HeartbeatAckSignal;
-import pisi.unitedmeows.violentcat.client.gateway.signal.impl.HeartbeatIntervalSignal;
-import pisi.unitedmeows.violentcat.client.gateway.signal.impl.IdentifySignal;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.parallel.Promise;
 import pisi.unitedmeows.yystal.utils.Capsule;
@@ -42,16 +39,15 @@ public class DiscordClientGateway extends WebSocketClient {
 	static {
 		registerSignal(HeartbeatIntervalSignal.class);
 		registerSignal(ReadySignal.class);
+		registerSignal(MessageCreateSignal.class);
 	}
 
 	private static void registerSignal(Class<? extends Signal> clazz) {
 		final RegisterSignal annotation = clazz.getAnnotation(RegisterSignal.class);
 		try {
 			signals.put(annotation.op(), clazz.newInstance());
-		} catch (InstantiationException e) {
-
-		} catch (IllegalAccessException e) {
-
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -141,7 +137,5 @@ public class DiscordClientGateway extends WebSocketClient {
 	}
 
 	@Override
-	public void onError(Exception e) {
-		System.out.println(e.getCause().getMessage());
-	}
+	public void onError(Exception e) {}
 }
