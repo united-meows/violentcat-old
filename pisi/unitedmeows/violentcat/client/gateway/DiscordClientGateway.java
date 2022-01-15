@@ -10,6 +10,7 @@ import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.*;
 import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
+import pisi.unitedmeows.violentcat.utils.Intent;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.parallel.Promise;
 import pisi.unitedmeows.yystal.utils.Capsule;
@@ -62,7 +63,9 @@ public class DiscordClientGateway extends WebSocketClient {
 
 	public void login(String token, Capsule capsule) {
 		IdentifySignal identifySignal = new IdentifySignal(token,
-				capsule.getOrDefault("intents", 513),
+				capsule.getOrDefault("intents", Intent.calculateBitmask(Intent.DIRECT_MESSAGES,
+						Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS, Intent.GUILD_BANS,
+						Intent.GUILDS)),
 				capsule.getOrDefault("os", "linux"),
 				capsule.getOrDefault("browser", "violentcat"),
 				capsule.getOrDefault("device", "violentcat"),
@@ -80,7 +83,6 @@ public class DiscordClientGateway extends WebSocketClient {
 		if (heartBeatPromise != null) {
 			heartBeatPromise.stop();
 		}
-		System.out.println("setup heart beat " + miliseconds);
 		heartBeatPromise = async_loop(() -> {
 			/* sending heartbeat ack */
 			send(new HeartbeatAckSignal());
