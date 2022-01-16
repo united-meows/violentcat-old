@@ -47,6 +47,10 @@ public class Channel {
         type = _type;
     }
 
+    public String id() {
+        return id;
+    }
+
     public enum Type {
         GUILD_TEXT(0),
         GUILD_VOICE(2),

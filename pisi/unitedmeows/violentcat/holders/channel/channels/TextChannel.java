@@ -2,6 +2,7 @@ package pisi.unitedmeows.violentcat.holders.channel.channels;
 
 import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.holders.channel.Channel;
+import pisi.unitedmeows.violentcat.holders.message.RichText;
 
 public class TextChannel extends Channel {
 
@@ -21,7 +22,11 @@ public class TextChannel extends Channel {
      * }
      */
     public void sendMessage(String message) {
-        String jsonResult = client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/messages", "{  \"content\": \"Hello, World!\", \"tts\": false, \"embeds\": [{ \"title\": \"Hello, Embed!\", \"description\": \"This is an embedded message.\"}]}");
+        client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/messages", String.format("{  \"content\": \"%s\", \"tts\": false}", message));
+    }
+
+    public void sendMessage(RichText richText) {
+        client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/messages", richText.json());
     }
 
     @Override

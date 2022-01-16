@@ -6,10 +6,10 @@ import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.holders.channel.Channel;
 import pisi.unitedmeows.violentcat.holders.channel.channels.*;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
-import pisi.unitedmeows.yystal.web.YWebClient;
 import pisi.unitedmeows.yystal.utils.Iterate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Guild {
 
@@ -166,6 +166,19 @@ public class Guild {
         return channels;
     }
 
+
+    public <X extends Channel> X getChannel(String channelId) {
+        AtomicReference<X> channel = new AtomicReference<>(null);
+        channelsAsIterable(x -> {
+            if (x.id().equalsIgnoreCase(channelId)) {
+                System.out.println("found");
+                channel.set((X) x);
+                return false;
+            }
+            return true;
+        });
+        return channel.get();
+    }
 
     @SuppressWarnings("unchecked")
     public <X extends Channel> void channelsAsIterable(Iterate<X> iterate) {
