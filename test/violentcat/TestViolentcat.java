@@ -12,7 +12,7 @@ public class TestViolentcat {
 		DiscordClient discordClient = new DiscordClient(AccountType.BOT, "OTMxMTgwNDA3Njk5OTU5ODc4.YeArVQ.hpBUz2-nPt_1T1tbad0qrZwjSVQ");
 		discordClient.login();
 		discordClient.setPresence(Presence.streaming("ersinle", "https://www.twitch.tv/gamegrim"));
-
+		discordClient.getGuild("931282703477784690").getStageChannels();
 		kThread.sleep(100000);
 	}
 }

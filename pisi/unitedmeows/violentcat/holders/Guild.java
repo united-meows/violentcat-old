@@ -1,105 +1,229 @@
 package pisi.unitedmeows.violentcat.holders;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
+import pisi.unitedmeows.violentcat.holders.channel.Channel;
+import pisi.unitedmeows.violentcat.holders.channel.channels.*;
+import pisi.unitedmeows.violentcat.utils.JsonUtil;
+import pisi.unitedmeows.yystal.web.YWebClient;
 
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Guild {
 
-	protected String id;
-	protected String name;
-	protected String icon;
-	protected String desc;
-	protected String splash;
-	protected String discovery_splash;
-	protected String banner;
-	protected String ownerId;
-	protected String applicationId;
-	protected String region;
-	protected String afkChannelId;
-	protected int afkTimeout;
-	protected String systemChannelId;
-	protected boolean widgetEnabled;
-	protected String widgetChannelId;
-	protected int verificationLevel;
-	protected int defaultMessageNotifications;
-	protected int mfaLevel;
-	protected int explicitContentFilter;
-	protected String maxPresences;
-	protected int maxMembers;
-	protected int maxVideoChannelUsers;
-	protected String vanityUrl;
-	protected int premiumTier;
-	protected int premiumSubscriptionCount;
-	protected int systemChannelFlags;
-	protected String preferredLocale;
-	protected String rulesChannelId;
-	protected String publicUpdatesChannelId;
-	protected String hubType;
-	protected boolean premiumProgressBarEnabled;
-	protected boolean nsfw;
-	protected int nsfwLevel;
-	/* emojis */
-	/* stickers */
+    protected String id;
+    protected String name;
+    protected String icon;
+    protected String desc;
+    protected String splash;
+    protected String discovery_splash;
+    protected String banner;
+    protected String ownerId;
+    protected String applicationId;
+    protected String region;
+    protected String afkChannelId;
+    protected int afkTimeout;
+    protected String systemChannelId;
+    protected boolean widgetEnabled;
+    protected String widgetChannelId;
+    protected int verificationLevel;
+    protected int defaultMessageNotifications;
+    protected int mfaLevel;
+    protected int explicitContentFilter;
+    protected String maxPresences;
+    protected int maxMembers;
+    protected int maxVideoChannelUsers;
+    protected String vanityUrl;
+    protected int premiumTier;
+    protected int premiumSubscriptionCount;
+    protected int systemChannelFlags;
+    protected String preferredLocale;
+    protected String rulesChannelId;
+    protected String publicUpdatesChannelId;
+    protected String hubType;
+    protected boolean premiumProgressBarEnabled;
+    protected boolean nsfw;
+    protected int nsfwLevel;
+    /* emojis */
+    /* stickers */
 
 
-	protected DiscordClient client;
+    protected DiscordClient client;
 
-	public Guild(DiscordClient client, String id, String name, String icon, String desc,
-				 String splash, String discovery_splash, String banner, String ownerId,
-				 String applicationId, String region, String afkChannelId, int afkTimeout,
-				 String systemChannelId, boolean widgetEnabled, String widgetChannelId,
-				 int verificationLevel, int defaultMessageNotifications, int mfaLevel,
-				 int explicitContentFilter, String maxPresences, int maxMembers,
-				 int maxVideoChannelUsers, String vanityUrl, int premiumTier,
-				 int premiumSubscriptionCount, int systemChannelFlags, String preferredLocale,
-				 String rulesChannelId, String publicUpdatesChannelId, String hubType,
-				 boolean premiumProgressBarEnabled, boolean nsfw, int nsfwLevel) {
-		this.id = id;
-		this.name = name;
-		this.icon = icon;
-		this.desc = desc;
-		this.splash = splash;
-		this.discovery_splash = discovery_splash;
-		this.banner = banner;
-		this.ownerId = ownerId;
-		this.applicationId = applicationId;
-		this.region = region;
-		this.afkChannelId = afkChannelId;
-		this.afkTimeout = afkTimeout;
-		this.systemChannelId = systemChannelId;
-		this.widgetEnabled = widgetEnabled;
-		this.widgetChannelId = widgetChannelId;
-		this.verificationLevel = verificationLevel;
-		this.defaultMessageNotifications = defaultMessageNotifications;
-		this.mfaLevel = mfaLevel;
-		this.explicitContentFilter = explicitContentFilter;
-		this.maxPresences = maxPresences;
-		this.maxMembers = maxMembers;
-		this.maxVideoChannelUsers = maxVideoChannelUsers;
-		this.vanityUrl = vanityUrl;
-		this.premiumTier = premiumTier;
-		this.premiumSubscriptionCount = premiumSubscriptionCount;
-		this.systemChannelFlags = systemChannelFlags;
-		this.preferredLocale = preferredLocale;
-		this.rulesChannelId = rulesChannelId;
-		this.publicUpdatesChannelId = publicUpdatesChannelId;
-		this.hubType = hubType;
-		this.premiumProgressBarEnabled = premiumProgressBarEnabled;
-		this.nsfw = nsfw;
-		this.nsfwLevel = nsfwLevel;
-		this.client = client;
-	}
+    public Guild(DiscordClient client, String id, String name, String icon, String desc,
+                 String splash, String discovery_splash, String banner, String ownerId,
+                 String applicationId, String region, String afkChannelId, int afkTimeout,
+                 String systemChannelId, boolean widgetEnabled, String widgetChannelId,
+                 int verificationLevel, int defaultMessageNotifications, int mfaLevel,
+                 int explicitContentFilter, String maxPresences, int maxMembers,
+                 int maxVideoChannelUsers, String vanityUrl, int premiumTier,
+                 int premiumSubscriptionCount, int systemChannelFlags, String preferredLocale,
+                 String rulesChannelId, String publicUpdatesChannelId, String hubType,
+                 boolean premiumProgressBarEnabled, boolean nsfw, int nsfwLevel) {
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.desc = desc;
+        this.splash = splash;
+        this.discovery_splash = discovery_splash;
+        this.banner = banner;
+        this.ownerId = ownerId;
+        this.applicationId = applicationId;
+        this.region = region;
+        this.afkChannelId = afkChannelId;
+        this.afkTimeout = afkTimeout;
+        this.systemChannelId = systemChannelId;
+        this.widgetEnabled = widgetEnabled;
+        this.widgetChannelId = widgetChannelId;
+        this.verificationLevel = verificationLevel;
+        this.defaultMessageNotifications = defaultMessageNotifications;
+        this.mfaLevel = mfaLevel;
+        this.explicitContentFilter = explicitContentFilter;
+        this.maxPresences = maxPresences;
+        this.maxMembers = maxMembers;
+        this.maxVideoChannelUsers = maxVideoChannelUsers;
+        this.vanityUrl = vanityUrl;
+        this.premiumTier = premiumTier;
+        this.premiumSubscriptionCount = premiumSubscriptionCount;
+        this.systemChannelFlags = systemChannelFlags;
+        this.preferredLocale = preferredLocale;
+        this.rulesChannelId = rulesChannelId;
+        this.publicUpdatesChannelId = publicUpdatesChannelId;
+        this.hubType = hubType;
+        this.premiumProgressBarEnabled = premiumProgressBarEnabled;
+        this.nsfw = nsfw;
+        this.nsfwLevel = nsfwLevel;
+        this.client = client;
+    }
 
-	public TextChannel getTextChannel(String channelId) {
-		return null;
-	}
+    public List<TextChannel> getTextChannels() {
+        List<TextChannel> channels = new ArrayList<>();
+        YWebClient yWebClient = new YWebClient();
+        yWebClient.header("Authorization", "Bot " + client.getToken());
+        yWebClient.setUserAgent("cats");
+        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
+        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
+        for (int i = 0; i < data.size(); i++) {
+            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
+            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
+            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
+            String parentId = JsonUtil.getString(data.get(i).getAsJsonObject().get("parent_id"));
+            String topic;
+            boolean nsfw = JsonUtil.getBoolean(data.get(i).getAsJsonObject().get("nsfw"));
+            String lastMessageId;
+            if (type == Channel.Type.GUILD_TEXT.getId() && data.get(i).getAsJsonObject().has("last_message_id")) {
+                lastMessageId = JsonUtil.getString(data.get(i).getAsJsonObject().get("last_message_id"));
+                topic = JsonUtil.getString(data.get(i).getAsJsonObject().get("topic"));
+                channels.add(new TextChannel(client, name, id, lastMessageId, parentId, topic, nsfw, Channel.Type.GUILD_TEXT));
+            }
+        }
+        System.out.println(channels);
+        return channels;
+    }
 
-	public /*Channel */void getChannel(String channelId) {
+    public List<NewsChannel> getNewsChannels() {
+        List<NewsChannel> channels = new ArrayList<>();
+        YWebClient yWebClient = new YWebClient();
+        yWebClient.header("Authorization", "Bot " + client.getToken());
+        yWebClient.setUserAgent("cats");
+        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
+        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
+        for (int i = 0; i < data.size(); i++) {
+            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
+            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
+            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
+            String parentId = JsonUtil.getString(data.get(i).getAsJsonObject().get("parent_id"));
+            String topic;
+            boolean nsfw = JsonUtil.getBoolean(data.get(i).getAsJsonObject().get("nsfw"));
+            String lastMessageId;
+            if (type == Channel.Type.GUILD_NEWS.getId() && data.get(i).getAsJsonObject().has("last_message_id")) {
+                lastMessageId = JsonUtil.getString(data.get(i).getAsJsonObject().get("last_message_id"));
+                topic = JsonUtil.getString(data.get(i).getAsJsonObject().get("topic"));
+                channels.add(new NewsChannel(client, name, id, lastMessageId, parentId, topic, nsfw, Channel.Type.GUILD_NEWS));
+            }
+        }
+        System.out.println(channels);
+        return channels;
+    }
 
-	}
+    public List<CategoryChannel> getCategoryChannels() {
+        List<CategoryChannel> channels = new ArrayList<>();
+        YWebClient yWebClient = new YWebClient();
+        yWebClient.header("Authorization", "Bot " + client.getToken());
+        yWebClient.setUserAgent("cats");
+        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
+        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
+        for (int i = 0; i < data.size(); i++) {
+            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
+            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
+            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
+            if (type == Channel.Type.GUILD_CATEGORY.getId()) {
+                channels.add(new CategoryChannel(client, name, id, Channel.Type.GUILD_CATEGORY));
+            }
+        }
+        System.out.println(channels);
+        return channels;
+    }
 
-	public /*VoiceChannel*/void getVoiceChannel(String channelId) {
+    public List<StageChannel> getStageChannels() {
+        List<StageChannel> channels = new ArrayList<>();
+        YWebClient yWebClient = new YWebClient();
+        yWebClient.header("Authorization", "Bot " + client.getToken());
+        yWebClient.setUserAgent("cats");
+        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
+        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
+        for (int i = 0; i < data.size(); i++) {
+            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
+            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
+            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
+            String parentId = JsonUtil.getString(data.get(i).getAsJsonObject().get("parent_id"));
+            String rtc_region;
+            int bitrate;
+            int user_limit;
+            if (type == Channel.Type.GUILD_STAGE_VOICE.getId()) {
+                bitrate = JsonUtil.getInt(data.get(i).getAsJsonObject().get("bitrate"));
+                user_limit = JsonUtil.getInt(data.get(i).getAsJsonObject().get("user_limit"));
+                rtc_region = JsonUtil.getString(data.get(i).getAsJsonObject().get("rtc_region"));
+                channels.add(new StageChannel(client, name, id, parentId, rtc_region, bitrate, user_limit, Channel.Type.GUILD_STAGE_VOICE));
+            }
+        }
+        System.out.println(channels);
+        return channels;
+    }
 
-	}
+    public /*Channel */void getChannels() {
+        YWebClient yWebClient = new YWebClient();
+        yWebClient.header("Authorization", "Bot " + client.getToken());
+        yWebClient.setUserAgent("cats");
+        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
+        System.out.println(jsonResult);
+    }
+
+    public List<VoiceChannel> getVoiceChannels() {
+        List<VoiceChannel> channels = new ArrayList<>();
+        YWebClient yWebClient = new YWebClient();
+        yWebClient.header("Authorization", "Bot " + client.getToken());
+        yWebClient.setUserAgent("cats");
+        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
+        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
+        for (int i = 0; i < data.size(); i++) {
+            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
+            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
+            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
+            String parentId = JsonUtil.getString(data.get(i).getAsJsonObject().get("parent_id"));
+            String rtc_region;
+            int bitrate;
+            int user_limit;
+            if (type == Channel.Type.GUILD_VOICE.getId()) {
+                bitrate = JsonUtil.getInt(data.get(i).getAsJsonObject().get("bitrate"));
+                user_limit = JsonUtil.getInt(data.get(i).getAsJsonObject().get("user_limit"));
+                rtc_region = JsonUtil.getString(data.get(i).getAsJsonObject().get("rtc_region"));
+                channels.add(new VoiceChannel(client, name, id, parentId, rtc_region, bitrate, user_limit, Channel.Type.GUILD_VOICE));
+            }
+        }
+        System.out.println(channels);
+        return channels;
+    }
 }

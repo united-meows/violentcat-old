@@ -69,6 +69,10 @@ public class DiscordClient {
 		clientGateway.send(new PresenceUpdateSignal(presence));
 	}
 
+	public String getToken() {
+		return token;
+	}
+
 	/* add missing array elements */
 	public Guild getGuild(String guildId) {
 		YWebClient yWebClient = new YWebClient();
