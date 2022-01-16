@@ -63,9 +63,7 @@ public class DiscordClientGateway extends WebSocketClient {
 
 	public void login(String token, Capsule capsule) {
 		IdentifySignal identifySignal = new IdentifySignal(token,
-				capsule.getOrDefault("intents", Intent.calculateBitmask(Intent.DIRECT_MESSAGES,
-						Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS, Intent.GUILD_BANS,
-						Intent.GUILDS)),
+				capsule.getOrDefault("intents", client.intents()),
 				capsule.getOrDefault("os", "linux"),
 				capsule.getOrDefault("browser", "violentcat"),
 				capsule.getOrDefault("device", "violentcat"),

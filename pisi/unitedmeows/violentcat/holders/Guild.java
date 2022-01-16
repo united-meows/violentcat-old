@@ -7,7 +7,7 @@ import pisi.unitedmeows.violentcat.holders.channel.Channel;
 import pisi.unitedmeows.violentcat.holders.channel.channels.*;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.web.YWebClient;
-
+import pisi.unitedmeows.yystal.utils.Iterate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,132 +98,116 @@ public class Guild {
         this.client = client;
     }
 
-    public List<TextChannel> getTextChannels() {
+    public List<TextChannel> textChannels() {
         List<TextChannel> channels = new ArrayList<>();
-        YWebClient yWebClient = new YWebClient();
-        yWebClient.header("Authorization", "Bot " + client.getToken());
-        yWebClient.setUserAgent("cats");
-        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
-        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
-        for (int i = 0; i < data.size(); i++) {
-            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
-            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
-            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
-            String parentId = JsonUtil.getString(data.get(i).getAsJsonObject().get("parent_id"));
-            String topic;
-            boolean nsfw = JsonUtil.getBoolean(data.get(i).getAsJsonObject().get("nsfw"));
-            String lastMessageId;
-            if (type == Channel.Type.GUILD_TEXT.getId() && data.get(i).getAsJsonObject().has("last_message_id")) {
-                lastMessageId = JsonUtil.getString(data.get(i).getAsJsonObject().get("last_message_id"));
-                topic = JsonUtil.getString(data.get(i).getAsJsonObject().get("topic"));
-                channels.add(new TextChannel(client, name, id, lastMessageId, parentId, topic, nsfw, Channel.Type.GUILD_TEXT));
+        channelsAsIterable((x) -> {
+            if (x instanceof TextChannel) {
+                channels.add((TextChannel) x);
             }
-        }
-        System.out.println(channels);
+            return true;
+        });
+
         return channels;
     }
 
-    public List<NewsChannel> getNewsChannels() {
-        List<NewsChannel> channels = new ArrayList<>();
-        YWebClient yWebClient = new YWebClient();
-        yWebClient.header("Authorization", "Bot " + client.getToken());
-        yWebClient.setUserAgent("cats");
-        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
-        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
-        for (int i = 0; i < data.size(); i++) {
-            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
-            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
-            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
-            String parentId = JsonUtil.getString(data.get(i).getAsJsonObject().get("parent_id"));
-            String topic;
-            boolean nsfw = JsonUtil.getBoolean(data.get(i).getAsJsonObject().get("nsfw"));
-            String lastMessageId;
-            if (type == Channel.Type.GUILD_NEWS.getId() && data.get(i).getAsJsonObject().has("last_message_id")) {
-                lastMessageId = JsonUtil.getString(data.get(i).getAsJsonObject().get("last_message_id"));
-                topic = JsonUtil.getString(data.get(i).getAsJsonObject().get("topic"));
-                channels.add(new NewsChannel(client, name, id, lastMessageId, parentId, topic, nsfw, Channel.Type.GUILD_NEWS));
-            }
-        }
-        System.out.println(channels);
-        return channels;
-    }
-
-    public List<CategoryChannel> getCategoryChannels() {
-        List<CategoryChannel> channels = new ArrayList<>();
-        YWebClient yWebClient = new YWebClient();
-        yWebClient.header("Authorization", "Bot " + client.getToken());
-        yWebClient.setUserAgent("cats");
-        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
-        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
-        for (int i = 0; i < data.size(); i++) {
-            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
-            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
-            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
-            if (type == Channel.Type.GUILD_CATEGORY.getId()) {
-                channels.add(new CategoryChannel(client, name, id, Channel.Type.GUILD_CATEGORY));
-            }
-        }
-        System.out.println(channels);
-        return channels;
-    }
-
-    public List<StageChannel> getStageChannels() {
+    public List<StageChannel> stageChannels() {
         List<StageChannel> channels = new ArrayList<>();
-        YWebClient yWebClient = new YWebClient();
-        yWebClient.header("Authorization", "Bot " + client.getToken());
-        yWebClient.setUserAgent("cats");
-        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
-        JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
-        for (int i = 0; i < data.size(); i++) {
-            String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
-            int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
-            String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
-            String parentId = JsonUtil.getString(data.get(i).getAsJsonObject().get("parent_id"));
-            String rtc_region;
-            int bitrate;
-            int user_limit;
-            if (type == Channel.Type.GUILD_STAGE_VOICE.getId()) {
-                bitrate = JsonUtil.getInt(data.get(i).getAsJsonObject().get("bitrate"));
-                user_limit = JsonUtil.getInt(data.get(i).getAsJsonObject().get("user_limit"));
-                rtc_region = JsonUtil.getString(data.get(i).getAsJsonObject().get("rtc_region"));
-                channels.add(new StageChannel(client, name, id, parentId, rtc_region, bitrate, user_limit, Channel.Type.GUILD_STAGE_VOICE));
+        channelsAsIterable((x) -> {
+            if (x instanceof StageChannel) {
+                channels.add((StageChannel) x);
             }
-        }
-        System.out.println(channels);
+            return true;
+        });
+
         return channels;
     }
 
-    public /*Channel */void getChannels() {
-        YWebClient yWebClient = new YWebClient();
-        yWebClient.header("Authorization", "Bot " + client.getToken());
-        yWebClient.setUserAgent("cats");
-        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
-        System.out.println(jsonResult);
-    }
-
-    public List<VoiceChannel> getVoiceChannels() {
+    public List<VoiceChannel> voiceChannels() {
         List<VoiceChannel> channels = new ArrayList<>();
-        YWebClient yWebClient = new YWebClient();
-        yWebClient.header("Authorization", "Bot " + client.getToken());
-        yWebClient.setUserAgent("cats");
-        String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
+        channelsAsIterable((x) -> {
+            if (x instanceof VoiceChannel) {
+                channels.add((VoiceChannel) x);
+            }
+            return true;
+        });
+
+        return channels;
+    }
+
+    public List<CategoryChannel> categoryChannels() {
+        List<CategoryChannel> channels = new ArrayList<>();
+        channelsAsIterable((x) -> {
+            if (x instanceof CategoryChannel) {
+                channels.add((CategoryChannel) x);
+            }
+            return true;
+        });
+
+        return channels;
+    }
+
+
+    public List<NewsChannel> newsChannels() {
+        List<NewsChannel> channels = new ArrayList<>();
+        channelsAsIterable((x) -> {
+            if (x instanceof NewsChannel) {
+                channels.add((NewsChannel) x);
+            }
+            return true;
+        });
+
+        return channels;
+    }
+
+
+    public List<Channel> channels() {
+        List<Channel> channels = new ArrayList<>();
+        channelsAsIterable(channels::add);
+        return channels;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public <X extends Channel> void channelsAsIterable(Iterate<X> iterate) {
+        String jsonResult = client.webClient().downloadString("https://discord.com/api/v9/guilds/" + id + "/channels");
         JsonArray data = new JsonParser().parse(jsonResult).getAsJsonArray();
         for (int i = 0; i < data.size(); i++) {
             String name = JsonUtil.getString(data.get(i).getAsJsonObject().get("name"));
             int type = JsonUtil.getInt(data.get(i).getAsJsonObject().get("type"));
             String id = JsonUtil.getString(data.get(i).getAsJsonObject().get("id"));
             String parentId = JsonUtil.getString(data.get(i).getAsJsonObject().get("parent_id"));
-            String rtc_region;
-            int bitrate;
-            int user_limit;
-            if (type == Channel.Type.GUILD_VOICE.getId()) {
-                bitrate = JsonUtil.getInt(data.get(i).getAsJsonObject().get("bitrate"));
-                user_limit = JsonUtil.getInt(data.get(i).getAsJsonObject().get("user_limit"));
-                rtc_region = JsonUtil.getString(data.get(i).getAsJsonObject().get("rtc_region"));
-                channels.add(new VoiceChannel(client, name, id, parentId, rtc_region, bitrate, user_limit, Channel.Type.GUILD_VOICE));
+            boolean nsfw = JsonUtil.getBoolean(data.get(i).getAsJsonObject().get("nsfw"));
+
+            Channel.Type channelType = Channel.Type.parse(type);
+
+            if (channelType == Channel.Type.GUILD_VOICE) {
+                final int bitrate = JsonUtil.getInt(data.get(i).getAsJsonObject().get("bitrate"));
+                final int user_limit = JsonUtil.getInt(data.get(i).getAsJsonObject().get("user_limit"));
+                final String rtc_region = JsonUtil.getString(data.get(i).getAsJsonObject().get("rtc_region"));
+                if (!iterate.next((X) new StageChannel(client, name, id, parentId, rtc_region, bitrate, user_limit, Channel.Type.GUILD_STAGE_VOICE)))
+                    break;
+
+            } else if (type == Channel.Type.GUILD_TEXT.getId() && data.get(i).getAsJsonObject().has("last_message_id")) {
+                String lastMessageId = JsonUtil.getString(data.get(i).getAsJsonObject().get("last_message_id"));
+                String topic = JsonUtil.getString(data.get(i).getAsJsonObject().get("topic"));
+                if (!iterate.next((X) new TextChannel(client, name, id, lastMessageId, parentId, topic, nsfw, Channel.Type.GUILD_TEXT)))
+                    break;
+            } else if (type == Channel.Type.GUILD_STAGE_VOICE.getId()) {
+                int bitrate = JsonUtil.getInt(data.get(i).getAsJsonObject().get("bitrate"));
+                int user_limit = JsonUtil.getInt(data.get(i).getAsJsonObject().get("user_limit"));
+                String rtc_region = JsonUtil.getString(data.get(i).getAsJsonObject().get("rtc_region"));
+                if (!iterate.next((X)new StageChannel(client, name, id, parentId, rtc_region, bitrate, user_limit, Channel.Type.GUILD_STAGE_VOICE)))
+                    break;
+            } else if (type == Channel.Type.GUILD_CATEGORY.getId()) {
+                if (!iterate.next((X) new CategoryChannel(client, name, id, Channel.Type.GUILD_CATEGORY)))
+                    break;
+            } else if (type == Channel.Type.GUILD_NEWS.getId() && data.get(i).getAsJsonObject().has("last_message_id")) {
+                String lastMessageId = JsonUtil.getString(data.get(i).getAsJsonObject().get("last_message_id"));
+                String topic = JsonUtil.getString(data.get(i).getAsJsonObject().get("topic"));
+                if (!iterate.next((X)new NewsChannel(client, name, id, lastMessageId, parentId, topic, nsfw, Channel.Type.GUILD_NEWS)))
+                    break;
             }
         }
-        System.out.println(channels);
-        return channels;
     }
+
 }

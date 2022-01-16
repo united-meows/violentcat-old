@@ -63,6 +63,14 @@ public class Channel {
             id = _id;
         }
 
+        public static Type parse(int id) {
+            for (Type value : values()) {
+                if (value.id == id)
+                    return value;
+            }
+            return GUILD_TEXT;
+        }
+
         public int getId() {
             return id;
         }

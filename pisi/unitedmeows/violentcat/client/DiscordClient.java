@@ -11,6 +11,7 @@ import pisi.unitedmeows.violentcat.holders.Presence;
 import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.violentcat.user.DiscordUser;
 import pisi.unitedmeows.violentcat.user.SelfUser;
+import pisi.unitedmeows.violentcat.utils.Intent;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.clazz.prop;
 import pisi.unitedmeows.yystal.utils.Capsule;
@@ -28,42 +29,32 @@ public class DiscordClient {
 	protected DiscordClientGateway clientGateway;
 
 	/* create self user info holder class */
-	private Presence presence;
+	protected Presence presence;
 
 	private SelfUser selfUser;
 
 	private ApplicationInfo applicationInfo;
 
+	protected YWebClient webClient;
+	protected int intents = Intent.calculateBitmask(Intent.DIRECT_MESSAGES,
+			Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS, Intent.GUILD_BANS,
+			Intent.GUILDS);
+
 	public DiscordClient(AccountType _accountType, String _token) {
 		accountType = _accountType;
 		token = _token;
+		webClient = createWebClient(token);
 		try {
 			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
 		} catch (Exception ex) {}
-	}
-
-	public DiscordUser getUser(String id) {
-		YWebClient yWebClient = new YWebClient();
-		yWebClient.header("Authorization", "Bot " + token);
-		yWebClient.setUserAgent("cats");
-		String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/users/" + id);
-		JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
-		final String userId = JsonUtil.getString(data.get("id"));
-		final String userName = JsonUtil.getString(data.get("username"));
-		final String avatarId = JsonUtil.getString(data.get("avatar"));
-		final int discriminator = JsonUtil.getInt(data.get("discriminator"));
-		final int publicFlags = JsonUtil.getInt(data.get("public_flags"));
-		final String banner = JsonUtil.getString(data.get("banner"));
-		final String bannerColor = JsonUtil.getString(data.get("banner_color"));
-		final String accent_color = JsonUtil.getString(data.get("accent_color"));
-
-		return new DiscordUser(userId, userName, avatarId, discriminator, publicFlags, banner, bannerColor, accent_color);
 	}
 
 	public void login(Capsule optional) {
 		clientGateway.connect();
 		clientGateway.login(token, optional);
 	}
+
+
 
 	public void setPresence(Presence presence) {
 		clientGateway.send(new PresenceUpdateSignal(presence));
@@ -75,10 +66,7 @@ public class DiscordClient {
 
 	/* add missing array elements */
 	public Guild getGuild(String guildId) {
-		YWebClient yWebClient = new YWebClient();
-		yWebClient.header("Authorization", "Bot " + token);
-		yWebClient.setUserAgent("cats");
-		String jsonResult = yWebClient.downloadString("https://discord.com/api/v9/guilds/" + guildId);
+		String jsonResult = webClient.downloadString("https://discord.com/api/v9/guilds/" + guildId);
 		JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
 		String id = JsonUtil.getString(data.get("id"));
 		String name = JsonUtil.getString(data.get("name"));
@@ -131,15 +119,50 @@ public class DiscordClient {
 				public_updates_channel_id, hub_type, premium_progress_bar_enabled, nsfw, nsfw_level);
 	}
 
+	public DiscordUser getUser(String id) {
+		String jsonResult = webClient.downloadString("https://discord.com/api/v9/users/" + id);
+		JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
+		final String userId = JsonUtil.getString(data.get("id"));
+		final String userName = JsonUtil.getString(data.get("username"));
+		final String avatarId = JsonUtil.getString(data.get("avatar"));
+		final int discriminator = JsonUtil.getInt(data.get("discriminator"));
+		final int publicFlags = JsonUtil.getInt(data.get("public_flags"));
+		final String banner = JsonUtil.getString(data.get("banner"));
+		final String bannerColor = JsonUtil.getString(data.get("banner_color"));
+		final String accent_color = JsonUtil.getString(data.get("accent_color"));
 
-	public SelfUser getSelfUser() {
+		return new DiscordUser(userId, userName, avatarId, discriminator, publicFlags, banner, bannerColor, accent_color);
+	}
+
+	public SelfUser selfUser() {
 		return selfUser;
+	}
+
+	protected static YWebClient createWebClient(String token) {
+		YWebClient webClient = new YWebClient();
+		webClient.header("Authorization", "Bot " + token);
+		webClient.setUserAgent("cats");
+		return webClient;
+	}
+
+	public Presence presence() {
+		return presence;
+	}
+
+	public void setIntents(int intents) {
+		this.intents = intents;
+	}
+
+	public int intents() {
+		return intents;
 	}
 
 	@Deprecated
 	public void setSelfUser(SelfUser selfUser) {
 		this.selfUser = selfUser;
 	}
+
+
 
 	@Deprecated
 	public void setApplicationInfo(ApplicationInfo applicationInfo) {
@@ -152,6 +175,10 @@ public class DiscordClient {
 
 	public DiscordClientGateway clientGateway() {
 		return clientGateway;
+	}
+
+	public YWebClient webClient() {
+		return webClient;
 	}
 
 	public AccountType accountType() {
