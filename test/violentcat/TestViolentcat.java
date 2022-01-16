@@ -2,6 +2,7 @@ package test.violentcat;
 
 import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.holders.Presence;
+import pisi.unitedmeows.violentcat.holders.channel.channels.TextChannel;
 import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.yystal.utils.kThread;
 import pisi.unitedmeows.yystal.web.YWebClient;
@@ -19,7 +20,12 @@ public class TestViolentcat {
 
 		discordClient.login();
 		discordClient.setPresence(Presence.streaming("ersinle", "https://www.twitch.tv/gamegrim"));
-		discordClient.getGuild("931282703477784690").channels().forEach(System.out::println);
+		discordClient.getGuild("931282703477784690").channelsAsIterable(x -> {
+			if (x instanceof TextChannel) {
+				((TextChannel)x).sendMessage("anani götünden sikeyim");
+			}
+			return true;
+		});
 
 		kThread.sleep(100000);
 	}

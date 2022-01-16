@@ -10,6 +10,7 @@ public abstract class Signal {
 	public static final int SIGNAL_IDENTIFY = 2;
 	public static final int SIGNAL_READY = 2;
 	public static final int SIGNAL_PRESENCE = 3;
+	public static final int SIGNAL_SEND_MESSAGE = 0;
 
 	public abstract void read(DiscordClient client, JsonObject data);
 	public abstract JsonObject write(DiscordClient client);

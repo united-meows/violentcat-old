@@ -10,6 +10,20 @@ public class TextChannel extends Channel {
         super(_client, _name, _id, _last_message_id, _parent_id, _topic, _nsfw, _type);
     }
 
+    /**
+     * {
+     *   "content": "Hello, World!",
+     *   "tts": false,
+     *   "embeds": [{
+     *     "title": "Hello, Embed!",
+     *     "description": "This is an embedded message."
+     *   }]
+     * }
+     */
+    public void sendMessage(String message) {
+        String jsonResult = client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/messages", "{  \"content\": \"Hello, World!\", \"tts\": false, \"embeds\": [{ \"title\": \"Hello, Embed!\", \"description\": \"This is an embedded message.\"}]}");
+    }
+
     @Override
     public String toString() {
         return "name: " + name + " - " + "id: " + id + " - " + "last_message_id: " + last_message_id + " - " + "parent id: " + parent_id + " - " + "topic: " + topic + " - " + "nsfw: " + nsfw + " - " + "type: " + type;
