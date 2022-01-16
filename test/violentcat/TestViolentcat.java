@@ -9,9 +9,9 @@ import pisi.unitedmeows.yystal.web.YWebClient;
 public class TestViolentcat {
 
 	public static void main(String[] args) {
-		DiscordClient discordClient = new DiscordClient(AccountType.BOT, "OTMxMTgwNDA3Njk5OTU5ODc4.YeArVQ.hpBUz2-nPt_1T1tbad0qrZwjSVQ");
+		DiscordClient discordClient = new DiscordClient(AccountType.BOT, "TOKEN_HERE");
 		discordClient.login();
-		discordClient.setPresence(Presence.streaming("ersinle", "https://www.twitch.tv/gamegrim"));
+		discordClient.setPresence(Presence.streaming("kedilerle", "https://www.twitch.tv/gamegrim"));
 
 		kThread.sleep(100000);
 	}
