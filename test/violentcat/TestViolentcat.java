@@ -28,7 +28,7 @@ public class TestViolentcat {
 
 		RichText richText = new RichText();
 		RichText.Embed embed = new RichText.Embed().setAuthor(new RichText.Author().setName("anan"))
-						.setDescription("naber :D")
+						.setDescription("naber :D").setColor(Color.red)
 								.setFooter(new RichText.Footer().setText(":D"))
 										.setTitle("kediler")
 				.setImage(new RichText.Image().setUrl("https://media.discordapp.net/attachments/931282704014659676/932313282553978910/6c858b11004e447c18ecc7f037a23d08.jpg?width=338&height=488")
@@ -39,13 +39,7 @@ public class TestViolentcat {
 		richText.addEmbed(embed);
 
 
-		RichText.Component component = new RichText.Component();
-		component.setLabel("naber la :D").setUrl("https://google.com")
-						.setStyle(1)
-								.setDisabled(false);
-
-		richText.addComponent(component);
-
+		textChannel.getPins();
 		textChannel.sendMessage(richText);
 
 

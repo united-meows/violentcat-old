@@ -29,6 +29,14 @@ public class TextChannel extends Channel {
         client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/messages", richText.json());
     }
 
+    public void startTyping() {
+        client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + " /typing", "true");
+    }
+
+    public void getPins() {
+        System.out.println(client.webClient().downloadString("https://discord.com/api/v9/channels/" + id + "/pins"));
+    }
+
     @Override
     public String toString() {
         return "name: " + name + " - " + "id: " + id + " - " + "last_message_id: " + last_message_id + " - " + "parent id: " + parent_id + " - " + "topic: " + topic + " - " + "nsfw: " + nsfw + " - " + "type: " + type;

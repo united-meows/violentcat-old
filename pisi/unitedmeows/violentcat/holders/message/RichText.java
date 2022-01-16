@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class RichText extends SendMessage {
@@ -41,9 +42,9 @@ public class RichText extends SendMessage {
 				jsonEmbed.addProperty("type", embed.type);
 				jsonEmbed.addProperty("title", embed.title);
 				jsonEmbed.addProperty("description", embed.description);
-
+				int rgb = 65536 * embed.color.getRed() + 256 * embed.color.getGreen() + embed.color.getBlue();
 				if (embed.color != null)
-					jsonEmbed.addProperty("color", "#"+Integer.toHexString(embed.color.getRGB()).substring(2));
+					jsonEmbed.addProperty("color", rgb);
 
 
 				if (embed.image != null) {
@@ -117,6 +118,18 @@ public class RichText extends SendMessage {
 		}
 
 		return gson.toJson(json);
+	}
+
+	private String rgbToHex(int r, int g, int b)
+	{
+		Color hC;
+		hC = new Color(r,g,b);
+		String hex = Integer.toHexString(hC.getRGB() & 0xffffff);
+		while(hex.length() < 6){
+			hex = "0" + hex;
+		}
+		hex = "#0x" + hex;
+		return hex;
 	}
 
 	public static class Image {
