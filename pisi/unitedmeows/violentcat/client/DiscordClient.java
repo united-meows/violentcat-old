@@ -2,6 +2,8 @@ package pisi.unitedmeows.violentcat.client;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import pisi.unitedmeows.violentcat.action.Action;
+import pisi.unitedmeows.violentcat.action.DiscordActionPool;
 import pisi.unitedmeows.violentcat.client.gateway.DiscordClientGateway;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.IdentifySignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.PresenceUpdateSignal;
@@ -34,6 +36,8 @@ public class DiscordClient {
 	private SelfUser selfUser;
 
 	private ApplicationInfo applicationInfo;
+	protected DiscordActionPool discordActionPool;
+	protected DiscordClient _self;
 
 	protected YWebClient webClient;
 	protected int intents = Intent.calculateBitmask(Intent.DIRECT_MESSAGES,
@@ -44,9 +48,14 @@ public class DiscordClient {
 		accountType = _accountType;
 		token = _token;
 		webClient = createWebClient(token);
+		_self = this;
+		discordActionPool = new DiscordActionPool();
+		discordActionPool.start();
+
 		try {
 			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
 		} catch (Exception ex) {}
+
 	}
 
 	public void login(Capsule optional) {
@@ -65,58 +74,66 @@ public class DiscordClient {
 	}
 
 	/* add missing array elements */
-	public Guild getGuild(String guildId) {
-		String jsonResult = webClient.downloadString("https://discord.com/api/v9/guilds/" + guildId);
-		JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
-		String id = JsonUtil.getString(data.get("id"));
-		String name = JsonUtil.getString(data.get("name"));
-		String icon = JsonUtil.getString(data.get("icon"));
-		String desc = JsonUtil.getString(data.get("description"));
-		String splash = JsonUtil.getString(data.get("splash"));
-		String discovery_splash = JsonUtil.getString(data.get("discovery_splash"));
-		/**
-		 *  "emojis":[
-		 *
-		 *    ],
-		 *    "stickers":[
-		 *
-		 *    ],
-		 */
-		String banner = JsonUtil.getString(data.get("banner"));
-		String owner_id = JsonUtil.getString(data.get("owner_id"));
-		String application_id = JsonUtil.getString(data.get("application_id"));
-		String region = JsonUtil.getString(data.get("region"));
-		String afk_channel_id = JsonUtil.getString(data.get("afk_channel_id"));
-		int afk_timeout = JsonUtil.getInt(data.get("afk_timeout"));
-		String system_channel_id = JsonUtil.getString(data.get("system_channel_id"));
-		boolean widget_enabled = JsonUtil.getBoolean(data.get("widget_enabled"));
-		String widget_channel_id = JsonUtil.getString(data.get("widget_channel_id"));
-		int verification_level = JsonUtil.getInt(data.get("verification_level"));
-		int default_message_notifications = JsonUtil.getInt(data.get("default_message_notifications"));
-		int mfa_level = JsonUtil.getInt(data.get("mfa_level"));
-		int explicit_content_filter = JsonUtil.getInt(data.get("explicit_content_filter"));
-		String max_presences = JsonUtil.getString(data.get("max_presences"));
-		int max_members = JsonUtil.getInt(data.get("max_members"));
-		int max_video_channel_users = JsonUtil.getInt(data.get("max_video_channel_users"));
-		String vanity_url_code = JsonUtil.getString(data.get("vanity_url_code"));
-		int premium_tier = JsonUtil.getInt(data.get("premium_tier"));
-		int premium_subscription_count = JsonUtil.getInt(data.get("premium_subscription_count"));
-		int system_channel_flags = JsonUtil.getInt(data.get("system_channel_flags"));
-		String preferred_locale = JsonUtil.getString(data.get("preferred_locale"));
-		String rules_channel_id = JsonUtil.getString(data.get("rules_channel_id"));
-		String public_updates_channel_id = JsonUtil.getString(data.get("public_updates_channel_id"));
-		String hub_type = JsonUtil.getString(data.get("hub_type"));
-		boolean premium_progress_bar_enabled = JsonUtil.getBoolean(data.get("premium_progress_bar_enabled"));
-		boolean nsfw = JsonUtil.getBoolean(data.get("nsfw"));
-		int nsfw_level = JsonUtil.getInt(data.get("nsfw_level"));
+	public Action<Guild> getGuild(String guildId) {
+		Action<Guild> action =  new Action<Guild>(Action.MajorParameter.GUILD_ID, guildId, discordActionPool.rateLimit(Action.MajorParameter.GUILD_ID, guildId)) {
+			@Override
+			public void run() {
+				String jsonResult = webClient.downloadString("https://discord.com/api/v9/guilds/" + guildId);
+				JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
+				String id = JsonUtil.getString(data.get("id"));
+				String name = JsonUtil.getString(data.get("name"));
+				String icon = JsonUtil.getString(data.get("icon"));
+				String desc = JsonUtil.getString(data.get("description"));
+				String splash = JsonUtil.getString(data.get("splash"));
+				String discovery_splash = JsonUtil.getString(data.get("discovery_splash"));
+				/**
+				 *  "emojis":[
+				 *
+				 *    ],
+				 *    "stickers":[
+				 *
+				 *    ],
+				 */
+				String banner = JsonUtil.getString(data.get("banner"));
+				String owner_id = JsonUtil.getString(data.get("owner_id"));
+				String application_id = JsonUtil.getString(data.get("application_id"));
+				String region = JsonUtil.getString(data.get("region"));
+				String afk_channel_id = JsonUtil.getString(data.get("afk_channel_id"));
+				int afk_timeout = JsonUtil.getInt(data.get("afk_timeout"));
+				String system_channel_id = JsonUtil.getString(data.get("system_channel_id"));
+				boolean widget_enabled = JsonUtil.getBoolean(data.get("widget_enabled"));
+				String widget_channel_id = JsonUtil.getString(data.get("widget_channel_id"));
+				int verification_level = JsonUtil.getInt(data.get("verification_level"));
+				int default_message_notifications = JsonUtil.getInt(data.get("default_message_notifications"));
+				int mfa_level = JsonUtil.getInt(data.get("mfa_level"));
+				int explicit_content_filter = JsonUtil.getInt(data.get("explicit_content_filter"));
+				String max_presences = JsonUtil.getString(data.get("max_presences"));
+				int max_members = JsonUtil.getInt(data.get("max_members"));
+				int max_video_channel_users = JsonUtil.getInt(data.get("max_video_channel_users"));
+				String vanity_url_code = JsonUtil.getString(data.get("vanity_url_code"));
+				int premium_tier = JsonUtil.getInt(data.get("premium_tier"));
+				int premium_subscription_count = JsonUtil.getInt(data.get("premium_subscription_count"));
+				int system_channel_flags = JsonUtil.getInt(data.get("system_channel_flags"));
+				String preferred_locale = JsonUtil.getString(data.get("preferred_locale"));
+				String rules_channel_id = JsonUtil.getString(data.get("rules_channel_id"));
+				String public_updates_channel_id = JsonUtil.getString(data.get("public_updates_channel_id"));
+				String hub_type = JsonUtil.getString(data.get("hub_type"));
+				boolean premium_progress_bar_enabled = JsonUtil.getBoolean(data.get("premium_progress_bar_enabled"));
+				boolean nsfw = JsonUtil.getBoolean(data.get("nsfw"));
+				int nsfw_level = JsonUtil.getInt(data.get("nsfw_level"));
 
-		/* add to cache */
-		return new Guild(this, id, name, icon, desc, splash, discovery_splash, banner, owner_id,
-				application_id, region, afk_channel_id, afk_timeout, system_channel_id, widget_enabled,
-				widget_channel_id, verification_level, default_message_notifications, mfa_level,
-				explicit_content_filter, max_presences, max_members, max_video_channel_users, vanity_url_code,
-				premium_tier, premium_subscription_count, system_channel_flags, preferred_locale, rules_channel_id,
-				public_updates_channel_id, hub_type, premium_progress_bar_enabled, nsfw, nsfw_level);
+				/* add to cache */
+				end(new Guild(_self, id, name, icon, desc, splash, discovery_splash, banner, owner_id,
+						application_id, region, afk_channel_id, afk_timeout, system_channel_id, widget_enabled,
+						widget_channel_id, verification_level, default_message_notifications, mfa_level,
+						explicit_content_filter, max_presences, max_members, max_video_channel_users, vanity_url_code,
+						premium_tier, premium_subscription_count, system_channel_flags, preferred_locale, rules_channel_id,
+						public_updates_channel_id, hub_type, premium_progress_bar_enabled, nsfw, nsfw_level)
+				, webClient().responseHeaders());
+			}
+		};
+		discordActionPool.queue(action);
+		return action;
 	}
 
 	public DiscordUser getUser(String id) {
@@ -162,7 +179,9 @@ public class DiscordClient {
 		this.selfUser = selfUser;
 	}
 
-
+	public DiscordActionPool discordActionPool() {
+		return discordActionPool;
+	}
 
 	@Deprecated
 	public void setApplicationInfo(ApplicationInfo applicationInfo) {

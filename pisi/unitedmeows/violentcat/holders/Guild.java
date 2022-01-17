@@ -223,4 +223,51 @@ public class Guild {
         }
     }
 
+    public String name() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Guild{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", icon='" + icon + '\'' +
+                ", desc='" + desc + '\'' +
+                ", splash='" + splash + '\'' +
+                ", discovery_splash='" + discovery_splash + '\'' +
+                ", banner='" + banner + '\'' +
+                ", ownerId='" + ownerId + '\'' +
+                ", applicationId='" + applicationId + '\'' +
+                ", region='" + region + '\'' +
+                ", afkChannelId='" + afkChannelId + '\'' +
+                ", afkTimeout=" + afkTimeout +
+                ", systemChannelId='" + systemChannelId + '\'' +
+                ", widgetEnabled=" + widgetEnabled +
+                ", widgetChannelId='" + widgetChannelId + '\'' +
+                ", verificationLevel=" + verificationLevel +
+                ", defaultMessageNotifications=" + defaultMessageNotifications +
+                ", mfaLevel=" + mfaLevel +
+                ", explicitContentFilter=" + explicitContentFilter +
+                ", maxPresences='" + maxPresences + '\'' +
+                ", maxMembers=" + maxMembers +
+                ", maxVideoChannelUsers=" + maxVideoChannelUsers +
+                ", vanityUrl='" + vanityUrl + '\'' +
+                ", premiumTier=" + premiumTier +
+                ", premiumSubscriptionCount=" + premiumSubscriptionCount +
+                ", systemChannelFlags=" + systemChannelFlags +
+                ", preferredLocale='" + preferredLocale + '\'' +
+                ", rulesChannelId='" + rulesChannelId + '\'' +
+                ", publicUpdatesChannelId='" + publicUpdatesChannelId + '\'' +
+                ", hubType='" + hubType + '\'' +
+                ", premiumProgressBarEnabled=" + premiumProgressBarEnabled +
+                ", nsfw=" + nsfw +
+                ", nsfwLevel=" + nsfwLevel +
+                ", client=" + client +
+                '}';
+    }
+
+    public String id() {
+        return id;
+    }
 }
