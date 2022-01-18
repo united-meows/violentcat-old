@@ -1,7 +1,7 @@
 package pisi.unitedmeows.violentcat.action;
 
+import pisi.unitedmeows.violentcat.action.limit.RateLimit;
 import pisi.unitedmeows.yystal.clazz.function;
-import pisi.unitedmeows.yystal.parallel.IFunction;
 import pisi.unitedmeows.yystal.utils.Stopwatch;
 import pisi.unitedmeows.yystal.utils.kThread;
 

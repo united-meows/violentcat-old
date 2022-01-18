@@ -1,5 +1,6 @@
 package pisi.unitedmeows.violentcat.action;
 
+import pisi.unitedmeows.violentcat.action.limit.RateLimit;
 import pisi.unitedmeows.yystal.parallel.Async;
 import pisi.unitedmeows.yystal.utils.kThread;
 
@@ -7,7 +8,6 @@ import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.List;
 
 public class DiscordActionPool extends Thread {
 
@@ -16,7 +16,6 @@ public class DiscordActionPool extends Thread {
 	protected Deque<Action<?>> actionQueue = new ArrayDeque<>();
 	protected HashMap<Action.MajorParameter, HashMap<String, RateLimit>> rateLimits = new HashMap<>();
 	protected boolean running;
-
 
 	@Override
 	public void run() {
@@ -44,12 +43,6 @@ public class DiscordActionPool extends Thread {
 			kThread.sleep(1);
 		}
 
-	}
-
-	public RateLimit rateLimit(Action.MajorParameter parameter, String parameterName) {
-		return rateLimits.computeIfAbsent(parameter, (k) -> new HashMap<String, RateLimit>()).computeIfAbsent
-				(parameterName, (k) ->
-						new RateLimit(2173, 2173, -1,  -1));
 	}
 
 	public void queue(Action<?> action) {

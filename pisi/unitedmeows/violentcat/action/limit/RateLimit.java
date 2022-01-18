@@ -1,6 +1,8 @@
-package pisi.unitedmeows.violentcat.action;
+package pisi.unitedmeows.violentcat.action.limit;
 
 public class RateLimit {
+
+	public static final int SEND_MESSAGE_LIMIT = 5; // 5s
 
 	protected int limit;
 	protected int remaining;
