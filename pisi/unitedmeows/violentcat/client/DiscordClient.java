@@ -65,8 +65,11 @@ public class DiscordClient {
 
 
 
-	public void setPresence(Presence presence) {
-		clientGateway.send(new PresenceUpdateSignal(presence));
+	public void setPresence(Presence _presence) {
+		presence = _presence;
+		if (clientGateway.isOpen()) {
+			clientGateway.send(new PresenceUpdateSignal(presence));
+		}
 	}
 
 	public String getToken() {
@@ -75,7 +78,7 @@ public class DiscordClient {
 
 	/* add missing array elements */
 	public Action<Guild> getGuild(String guildId) {
-		Action<Guild> action =  new Action<Guild>(Action.MajorParameter.GUILD_ID, guildId, discordActionPool.rateLimit(Action.MajorParameter.GUILD_ID, guildId)) {
+		Action<Guild> action =  new Action<Guild>(discordActionPool(), Action.MajorParameter.GUILD_ID, guildId) {
 			@Override
 			public void run() {
 				String jsonResult = webClient.downloadString("https://discord.com/api/v9/guilds/" + guildId);

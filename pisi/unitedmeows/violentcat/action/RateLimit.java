@@ -5,9 +5,9 @@ public class RateLimit {
 	protected int limit;
 	protected int remaining;
 	protected long resetAfterMilliseconds;
-	protected int resetAfterSeconds;
+	protected double resetAfterSeconds;
 
-	public RateLimit(int _limit, int _remaining, long _resetAfterMilliseconds, int _resetAfterSeconds) {
+	public RateLimit(int _limit, int _remaining, long _resetAfterMilliseconds, double _resetAfterSeconds) {
 		limit = _limit;
 		remaining = _remaining;
 		resetAfterMilliseconds = _resetAfterMilliseconds;
@@ -22,11 +22,21 @@ public class RateLimit {
 		return remaining;
 	}
 
-	public int resetAfterSeconds() {
+	public double resetAfterSeconds() {
 		return resetAfterSeconds;
 	}
 
 	public long resetAfterMilliseconds() {
 		return resetAfterMilliseconds;
+	}
+
+	@Override
+	public String toString() {
+		return "RateLimit{" +
+				"limit=" + limit +
+				", remaining=" + remaining +
+				", resetAfterMilliseconds=" + resetAfterMilliseconds +
+				", resetAfterSeconds=" + resetAfterSeconds +
+				'}';
 	}
 }

@@ -50,7 +50,8 @@ public class IdentifySignal extends Signal {
 		dElement.addProperty("intents", intents);
 		JsonObject properties = new JsonObject();
 		properties.addProperty("$os", os);
-		properties.addProperty("$browser", browser);
+		properties.addProperty("$browser", (client.presence() != null && client.presence().getStatus() ==
+				Presence.Status.MOBILE) ? client.presence().getStatus().code() : browser);
 		properties.addProperty("$device", device);
 		dElement.add("properties", properties);
 

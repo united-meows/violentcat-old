@@ -1,5 +1,7 @@
 package pisi.unitedmeows.violentcat.holders;
 
+import pisi.unitedmeows.yystal.hook.YString;
+
 public class Presence {
 
 	protected String statusMessage;
@@ -39,7 +41,7 @@ public class Presence {
 	}
 
 	public static Presence nothing() {
-		return new Presence(null, Type.NOTHING, null);
+		return new Presence(null, null, null);
 	}
 
 	public static Presence playing(String message) {
@@ -48,6 +50,9 @@ public class Presence {
 
 	public static Presence watching(String message) {
 		return new Presence(null, Type.WATCHING, message);
+	}
+	public static Presence mobile() {
+		return new Presence(Status.MOBILE, Type.NOTHING, YString.EMPTY_R);
 	}
 
 	public static Presence streaming(String message, String url) {
@@ -88,7 +93,8 @@ public class Presence {
 		IDLE("idle"),
 		DO_NOT_DISTURB("dnd"),
 		INVISIBLE("invisible"),
-		OFFLINE("offline");
+		OFFLINE("offline"),
+		MOBILE("Discord Android");
 		String code;
 		Status(String _code) {
 			code = _code;

@@ -2,6 +2,7 @@ package pisi.unitedmeows.violentcat.holders;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
+import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.holders.channel.Channel;
 import pisi.unitedmeows.violentcat.holders.channel.channels.*;
@@ -167,17 +168,25 @@ public class Guild {
     }
 
 
-    public <X extends Channel> X getChannel(String channelId) {
-        AtomicReference<X> channel = new AtomicReference<>(null);
-        channelsAsIterable(x -> {
-            if (x.id().equalsIgnoreCase(channelId)) {
-                System.out.println("found");
-                channel.set((X) x);
-                return false;
+    public <X extends Channel> Action<X> getChannel(String channelId) {
+        Action<X> action = new Action<X>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, channelId) {
+            @Override
+            public void run() {
+                AtomicReference<X> channel = new AtomicReference<>(null);
+                channelsAsIterable(x -> {
+                    System.out.println(x.id());
+                    if (x.id().equalsIgnoreCase(channelId)) {
+                        System.out.println("found");
+                        channel.set((X) x);
+                        return false;
+                    }
+                    return true;
+                });
+                end(channel.get(), client.webClient().responseHeaders());
             }
-            return true;
-        });
-        return channel.get();
+        };
+        client.discordActionPool().queue(action);
+        return action;
     }
 
     @SuppressWarnings("unchecked")

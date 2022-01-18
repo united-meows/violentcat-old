@@ -24,10 +24,27 @@ public class TestViolentcat {
 		DiscordClient discordClient = new DiscordClient(AccountType.BOT,
 				new String(Base64.getDecoder().decode(tokenDecode)));
 
-		discordClient.login();
-		discordClient.setPresence(Presence.streaming("ersinle", "https://www.twitch.tv/gamegrim"));
-		Guild guild = discordClient.getGuild("931282703477784690").await();
 
+		discordClient.setPresence(Presence.mobile());
+		discordClient.login();
+
+		Guild guild = discordClient.getGuild("931282703477784690").await();
+		System.out.println(guild);
+		TextChannel textChannel = (TextChannel) guild.getChannel("931282704014659676").await();
+		System.out.println(textChannel);
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
+		textChannel.sendMessage("test");
 
 
 

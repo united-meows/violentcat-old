@@ -18,22 +18,37 @@ public abstract class Action<Result> extends function {
 	protected MajorParameter majorParameter;
 	protected Result result;
 	protected String majorName;
+	protected DiscordActionPool actionPool;
 
-	protected RateLimit rateLimit;
-
-	public Action(MajorParameter _parameter, String _majorName, RateLimit _rateLimit) {
+	public Action(DiscordActionPool _actionPool, MajorParameter _parameter, String _majorName) {
 		majorParameter = _parameter;
+		actionPool = _actionPool;
 		majorName = _majorName;
 		finished = false;
 		timer = new Stopwatch();
 		timer.reset();
-		rateLimit = _rateLimit;
 	}
 
 
 	public void end(Result _result, Map<String, List<String>> _responseHeaders) {
 		finished = true;
 		/* do ratelimit parsing */
+		List<String> limit = _responseHeaders.getOrDefault("x-ratelimit-limit", null);
+		if (limit != null)
+			rateLimit().limit = Integer.parseInt(limit.get(0));
+
+		List<String> remaining = _responseHeaders.getOrDefault("x-ratelimit-remaining", null);
+		if (remaining != null)
+			rateLimit().remaining = Integer.parseInt(remaining.get(0));
+
+		List<String> resetAfter = _responseHeaders.getOrDefault("x-ratelimit-reset-after", null);
+		if (resetAfter != null)
+			rateLimit().resetAfterSeconds = Double.parseDouble(resetAfter.get(0));
+
+		List<String> reset = _responseHeaders.getOrDefault("x-ratelimit-reset", null);
+		if (reset != null)
+			rateLimit().resetAfterMilliseconds = Long.parseLong(reset.get(0).replaceAll("\\.[^ ]+", ""));
+
 
 		result = _result;
 	}
@@ -51,7 +66,7 @@ public abstract class Action<Result> extends function {
 	}
 
 	public RateLimit rateLimit() {
-		return rateLimit;
+		return actionPool.rateLimit(majorParameter, majorName);
 	}
 
 	public MajorParameter majorParameter() {
@@ -61,6 +76,7 @@ public abstract class Action<Result> extends function {
 	public String majorName() {
 		return majorName;
 	}
+
 
 	public static enum MajorParameter {
 		GUILD_ID,
