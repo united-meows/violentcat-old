@@ -1,6 +1,7 @@
 package pisi.unitedmeows.violentcat.action;
 
 import pisi.unitedmeows.violentcat.action.limit.RateLimit;
+import pisi.unitedmeows.violentcat.action.limit.RateListener;
 import pisi.unitedmeows.yystal.clazz.function;
 import pisi.unitedmeows.yystal.utils.Stopwatch;
 import pisi.unitedmeows.yystal.utils.kThread;
@@ -19,6 +20,7 @@ public abstract class Action<Result> extends function {
 	protected Result result;
 	protected String majorName;
 	protected DiscordActionPool actionPool;
+	protected RateListener rateListener;
 
 	public Action(DiscordActionPool _actionPool, MajorParameter _parameter, String _majorName) {
 		majorParameter = _parameter;
@@ -30,27 +32,14 @@ public abstract class Action<Result> extends function {
 	}
 
 
-	public void end(Result _result, Map<String, List<String>> _responseHeaders) {
-		finished = true;
-		/* do ratelimit parsing */
-		List<String> limit = _responseHeaders.getOrDefault("x-ratelimit-limit", null);
-		if (limit != null)
-			rateLimit().limit = Integer.parseInt(limit.get(0));
-
-		List<String> remaining = _responseHeaders.getOrDefault("x-ratelimit-remaining", null);
-		if (remaining != null)
-			rateLimit().remaining = Integer.parseInt(remaining.get(0));
-
-		List<String> resetAfter = _responseHeaders.getOrDefault("x-ratelimit-reset-after", null);
-		if (resetAfter != null)
-			rateLimit().resetAfterSeconds = Double.parseDouble(resetAfter.get(0));
-
-		List<String> reset = _responseHeaders.getOrDefault("x-ratelimit-reset", null);
-		if (reset != null)
-			rateLimit().resetAfterMilliseconds = Long.parseLong(reset.get(0).replaceAll("\\.[^ ]+", ""));
+	public void pre(RateListener _rateListener) {
+		rateListener = _rateListener;
+	}
 
 
+	public void end(Result _result) {
 		result = _result;
+		rateListener.end(majorName);
 	}
 
 	public Result await() {
@@ -63,10 +52,6 @@ public abstract class Action<Result> extends function {
 	public Action<Result> setTimeout(int _timeout) {
 		timeout = _timeout;
 		return this;
-	}
-
-	public RateLimit rateLimit() {
-		return actionPool.rateLimit(majorParameter, majorName);
 	}
 
 	public MajorParameter majorParameter() {
@@ -82,6 +67,7 @@ public abstract class Action<Result> extends function {
 		GUILD_ID,
 		CHANNEL_ID,
 		WEBHOOK_ID,
+		GLOBAL,
 		OTHER;
 	}
 }

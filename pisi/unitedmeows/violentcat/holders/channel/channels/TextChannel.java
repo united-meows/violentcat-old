@@ -29,7 +29,7 @@ public class TextChannel extends Channel {
             @Override
             public void run() {
                 client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/messages", String.format("{  \"content\": \"%s\", \"tts\": false}", message));
-                end(true, client.webClient().responseHeaders());
+                end(true);
             }
         };
         client.discordActionPool().queue(action);

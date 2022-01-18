@@ -1,5 +1,6 @@
 package pisi.unitedmeows.violentcat.client;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import pisi.unitedmeows.violentcat.action.Action;
@@ -83,6 +84,7 @@ public class DiscordClient {
 			public void run() {
 				String jsonResult = webClient.downloadString("https://discord.com/api/v9/guilds/" + guildId);
 				JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
+				JsonArray jsonArray = data.getAsJsonArray("emojis");
 				String id = JsonUtil.getString(data.get("id"));
 				String name = JsonUtil.getString(data.get("name"));
 				String icon = JsonUtil.getString(data.get("icon"));
@@ -131,8 +133,7 @@ public class DiscordClient {
 						widget_channel_id, verification_level, default_message_notifications, mfa_level,
 						explicit_content_filter, max_presences, max_members, max_video_channel_users, vanity_url_code,
 						premium_tier, premium_subscription_count, system_channel_flags, preferred_locale, rules_channel_id,
-						public_updates_channel_id, hub_type, premium_progress_bar_enabled, nsfw, nsfw_level)
-				, webClient().responseHeaders());
+						public_updates_channel_id, hub_type, premium_progress_bar_enabled, nsfw, nsfw_level));
 			}
 		};
 		discordActionPool.queue(action);

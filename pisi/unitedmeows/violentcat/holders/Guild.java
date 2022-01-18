@@ -182,7 +182,7 @@ public class Guild {
                     }
                     return true;
                 });
-                end(channel.get(), client.webClient().responseHeaders());
+                end(channel.get());
             }
         };
         client.discordActionPool().queue(action);

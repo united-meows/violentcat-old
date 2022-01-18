@@ -29,27 +29,11 @@ public class TestViolentcat {
 		discordClient.login();
 
 		Guild guild = discordClient.getGuild("931282703477784690").await();
-		System.out.println(guild);
+
 		TextChannel textChannel = (TextChannel) guild.getChannel("931282704014659676").await();
-		System.out.println(textChannel);
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-		textChannel.sendMessage("test");
-
-
-
-		System.out.println(guild);
-		System.out.println(guild.name());
+		for (int i = 1; i < 100; i++) {
+			textChannel.sendMessage("test #" + i);
+		}
 
 
 		kThread.sleep(100000);

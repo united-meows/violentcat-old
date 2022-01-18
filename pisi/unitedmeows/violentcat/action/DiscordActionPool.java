@@ -1,5 +1,7 @@
 package pisi.unitedmeows.violentcat.action;
 
+import pisi.unitedmeows.violentcat.action.limit.ChannelRateListener;
+import pisi.unitedmeows.violentcat.action.limit.GuildRateListener;
 import pisi.unitedmeows.violentcat.action.limit.RateLimit;
 import pisi.unitedmeows.yystal.parallel.Async;
 import pisi.unitedmeows.yystal.utils.kThread;
@@ -13,40 +15,30 @@ public class DiscordActionPool extends Thread {
 
 	/* find a way to clear the map */
 
-	protected Deque<Action<?>> actionQueue = new ArrayDeque<>();
 	protected HashMap<Action.MajorParameter, HashMap<String, RateLimit>> rateLimits = new HashMap<>();
 	protected boolean running;
+
+	protected ChannelRateListener channelRateListener = new ChannelRateListener();
+	protected GuildRateListener guildRateListener = new GuildRateListener();
 
 	@Override
 	public void run() {
 		running = true;
 		while (running) {
-			Action<?> action = actionQueue.poll();
-			if (action != null) {
-				RateLimit theRateLimit = action.rateLimit();
-				System.out.println(theRateLimit);
-				long doAfter = 0;
-				if (theRateLimit.limit != 2173) {
-					if (theRateLimit.remaining <= 0) {
-						doAfter = theRateLimit.resetAfterMilliseconds - Instant.now().getEpochSecond();
-						if (doAfter < 0) {
-							doAfter = 50;
-						}
-					}
-				}
-				if (doAfter == 0) {
-					Async.async(action::run);
-				} else {
-					Async.async_w(action::run, doAfter);
-				}
-			}
-			kThread.sleep(1);
+			channelRateListener.tick();
+			guildRateListener.tick();
+			kThread.sleep(50);
 		}
-
 	}
 
 	public void queue(Action<?> action) {
-		actionQueue.add(action);
+		if (action.majorParameter() == Action.MajorParameter.CHANNEL_ID) {
+			action.pre(channelRateListener);
+			channelRateListener.queue(action);
+		} else if (action.majorParameter() == Action.MajorParameter.GUILD_ID) {
+			action.pre(guildRateListener);
+			guildRateListener.queue(action);
+		}
 	}
 
 	public void drain() {
