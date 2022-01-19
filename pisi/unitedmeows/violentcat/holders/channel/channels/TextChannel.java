@@ -14,16 +14,6 @@ public class TextChannel extends Channel {
         super(_client, _name, _id, _last_message_id, _parent_id, _topic, _nsfw, _type);
     }
 
-    /**
-     * {
-     *   "content": "Hello, World!",
-     *   "tts": false,
-     *   "embeds": [{
-     *     "title": "Hello, Embed!",
-     *     "description": "This is an embedded message."
-     *   }]
-     * }
-     */
     public Action<Boolean> sendMessage(String message) {
         Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, id()) {
             @Override

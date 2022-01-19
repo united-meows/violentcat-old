@@ -39,12 +39,13 @@ public abstract class Action<Result> extends function {
 
 	public void end(Result _result) {
 		result = _result;
+		finished = true;
 		rateListener.end(majorName);
 	}
 
 	public Result await() {
 		while (!finished && !timer.isReached(timeout)) {
-			kThread.sleep(1000);
+			kThread.sleep(1);
 		}
 		return result;
 	}

@@ -13,9 +13,6 @@ import java.util.HashMap;
 
 public class DiscordActionPool extends Thread {
 
-	/* find a way to clear the map */
-
-	protected HashMap<Action.MajorParameter, HashMap<String, RateLimit>> rateLimits = new HashMap<>();
 	protected boolean running;
 
 	protected ChannelRateListener channelRateListener = new ChannelRateListener();

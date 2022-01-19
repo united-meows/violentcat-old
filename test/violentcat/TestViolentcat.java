@@ -32,7 +32,7 @@ public class TestViolentcat {
 
 		TextChannel textChannel = (TextChannel) guild.getChannel("931282704014659676").await();
 		for (int i = 1; i < 100; i++) {
-			textChannel.sendMessage("test #" + i);
+			textChannel.sendMessage("test #" + i).await();
 		}
 
 
