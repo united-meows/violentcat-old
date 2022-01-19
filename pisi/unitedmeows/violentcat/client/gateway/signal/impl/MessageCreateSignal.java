@@ -38,19 +38,6 @@ public class MessageCreateSignal extends Signal {
         String hoistedRole = JsonUtil.getString(m.get("hoisted_role"));
         boolean deaf = JsonUtil.getBoolean(m.get("deaf"));
 
-
-        /*
-        for (int i = 0; i < roles.size(); i++) {
-            String roleId = JsonUtil.getString(roles.get(i).getAsJsonObject());
-            System.out.println(roleId);
-        }
-         */
-
-
-
-
-
-
     }
 
     @Override

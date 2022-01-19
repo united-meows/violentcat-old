@@ -25,15 +25,18 @@ public class RichText extends SendMessage {
 		components.add(component);
 	}
 
+	public RichText setComponentType(int componentType) {
+		this.componentType = componentType;
+		return this;
+	}
 
 	public RichText() {}
+
 
 
 	public String json() {
 		JsonObject json = new JsonObject();
 		json.addProperty("content", content);
-		json.addProperty("tts", tts);
-
 
 		if (!embeds.isEmpty()) {
 			JsonArray embedArray = new JsonArray();
@@ -42,10 +45,10 @@ public class RichText extends SendMessage {
 				jsonEmbed.addProperty("type", embed.type);
 				jsonEmbed.addProperty("title", embed.title);
 				jsonEmbed.addProperty("description", embed.description);
-				int rgb = 65536 * embed.color.getRed() + 256 * embed.color.getGreen() + embed.color.getBlue();
-				if (embed.color != null)
+				if (embed.color != null) {
+					int rgb = 65536 * embed.color.getRed() + 256 * embed.color.getGreen() + embed.color.getBlue();
 					jsonEmbed.addProperty("color", rgb);
-
+				}
 
 				if (embed.image != null) {
 					JsonObject imageJson = new JsonObject();
@@ -93,11 +96,12 @@ public class RichText extends SendMessage {
 			JsonArray componentArray = new JsonArray();
 			for (Component component : components) {
 				JsonObject componentJson = new JsonObject();
-				componentJson.addProperty("style", component.style);
+				componentJson.addProperty("style", component.style.getId());
 				componentJson.addProperty("label", component.label);
 				componentJson.addProperty("url", component.url);
 				componentJson.addProperty("disabled", component.disabled);
 				componentJson.addProperty("type", component.type);
+				componentJson.addProperty("custom_id", component.customId);
 
 
 				if (component.emoji != null) {
@@ -108,7 +112,7 @@ public class RichText extends SendMessage {
 				}
 
 				componentArray.add(componentJson);
-			}//öyleyse intihar
+			}
 			JsonObject componentsTop = new JsonObject();
 			componentsTop.addProperty("type", componentType);
 			componentsTop.add("components", componentArray);
@@ -116,20 +120,8 @@ public class RichText extends SendMessage {
 
 			json.add("components", mainComponents);
 		}
-
+		System.out.println(gson.toJson(json));
 		return gson.toJson(json);
-	}
-
-	private String rgbToHex(int r, int g, int b)
-	{
-		Color hC;
-		hC = new Color(r,g,b);
-		String hex = Integer.toHexString(hC.getRGB() & 0xffffff);
-		while(hex.length() < 6){
-			hex = "0" + hex;
-		}
-		hex = "#0x" + hex;
-		return hex;
 	}
 
 	public static class Image {
@@ -253,13 +245,15 @@ public class RichText extends SendMessage {
 		}
 	}
 
+
 	public static class Component {
-		protected int style;
+		protected ButtonStyle style = ButtonStyle.PRIMARY;
 		protected String label;
 		protected String url;
 		protected boolean disabled;
 		protected Emoji emoji;
-		protected int type;
+		protected int type = 2;
+		protected String customId;
 
 		public Component setDisabled(boolean _disabled) {
 			disabled = _disabled;
@@ -276,7 +270,7 @@ public class RichText extends SendMessage {
 			return this;
 		}
 
-		public Component setStyle(int _style) {
+		public Component setStyle(ButtonStyle _style) {
 			style = _style;
 			return this;
 		}
@@ -291,6 +285,45 @@ public class RichText extends SendMessage {
 			return this;
 		}
 
+		public String customId() {
+			return customId;
+		}
+
+		public Component setCustomId(String custom_id) {
+			this.customId = custom_id;
+			return this;
+		}
+
+		@Override
+		public String toString() {
+			return "Component{" +
+					"style=" + style +
+					", label='" + label + '\'' +
+					", url='" + url + '\'' +
+					", disabled=" + disabled +
+					", emoji=" + emoji +
+					", type=" + type +
+					'}';
+		}
+	}
+
+
+	public static enum ButtonStyle {
+		PRIMARY(1),
+		SECONDARY(2),
+		SUCCESS(3),
+		DANGER(4),
+		LINK(5),
+		NOTHING(2173);
+
+		int id;
+		ButtonStyle(int _id) {
+			id = _id;
+		}
+
+		public int getId() {
+			return id;
+		}
 	}
 
 	public static class Emoji {
