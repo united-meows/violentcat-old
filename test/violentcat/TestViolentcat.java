@@ -37,6 +37,7 @@ public class TestViolentcat {
 				setColor(Color.CYAN).
 				setTitle("kediler").
 				end();
+		textChannel.createInvite(0, 2, false, true);
 
 
 
