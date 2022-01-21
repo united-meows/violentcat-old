@@ -66,11 +66,12 @@ public class DiscordClient {
 
 
 
-	public void setPresence(Presence _presence) {
+	public DiscordClient setPresence(Presence _presence) {
 		presence = _presence;
 		if (clientGateway.isOpen()) {
 			clientGateway.send(new PresenceUpdateSignal(presence));
 		}
+		return this;
 	}
 
 	public String getToken() {

@@ -24,8 +24,8 @@ public class TestViolentcat {
 		DiscordClient discordClient = new DiscordClient(AccountType.BOT,
 				new String(Base64.getDecoder().decode(tokenDecode)));
 
-		discordClient.setPresence(Presence.mobile());
-		discordClient.login();
+		discordClient.setPresence(Presence.mobile()).login();
+
 		Guild guild = discordClient.getGuild("931282703477784690").await();
 		TextChannel textChannel = (TextChannel) guild.getChannel("931282704014659676").await();
 
