@@ -2,6 +2,7 @@ package pisi.unitedmeows.violentcat.action;
 
 import pisi.unitedmeows.violentcat.action.limit.ChannelRateListener;
 import pisi.unitedmeows.violentcat.action.limit.GuildRateListener;
+import pisi.unitedmeows.violentcat.action.limit.MessageRateListener;
 import pisi.unitedmeows.violentcat.action.limit.RateLimit;
 import pisi.unitedmeows.yystal.parallel.Async;
 import pisi.unitedmeows.yystal.utils.kThread;
@@ -17,6 +18,7 @@ public class DiscordActionPool extends Thread {
 
 	protected ChannelRateListener channelRateListener = new ChannelRateListener();
 	protected GuildRateListener guildRateListener = new GuildRateListener();
+	protected MessageRateListener messageRateListener = new MessageRateListener();
 
 	@Override
 	public void run() {
@@ -24,7 +26,8 @@ public class DiscordActionPool extends Thread {
 		while (running) {
 			channelRateListener.tick();
 			guildRateListener.tick();
-			kThread.sleep(50);
+			messageRateListener.tick();
+			kThread.sleep(100);
 		}
 	}
 
@@ -35,6 +38,9 @@ public class DiscordActionPool extends Thread {
 		} else if (action.majorParameter() == Action.MajorParameter.GUILD_ID) {
 			action.pre(guildRateListener);
 			guildRateListener.queue(action);
+		} else if (action.majorParameter() == Action.MajorParameter.SEND_MESSAGE) {
+			action.pre(messageRateListener);
+			messageRateListener.queue(action);
 		}
 	}
 

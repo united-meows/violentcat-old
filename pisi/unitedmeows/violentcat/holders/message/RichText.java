@@ -17,21 +17,29 @@ public class RichText extends SendMessage {
 	protected static Gson gson = new Gson();
 	protected int componentType = 1;
 
-	public void addEmbed(Embed embed) {
-		embeds.add(embed);
-	}
-
-	public void addComponent(Component component) {
-		components.add(component);
-	}
-
 	public RichText setComponentType(int componentType) {
 		this.componentType = componentType;
 		return this;
 	}
 
-	public RichText() {}
+	protected RichText() {}
 
+
+	public static RichText create() {
+		return new RichText();
+	}
+
+	public Embed createEmbed() {
+		Embed embed = new Embed(this);
+		embeds.add(embed);
+		return embed;
+	}
+
+	public Component createComponent() {
+		Component component = new Component(this);
+		components.add(component);
+		return component;
+	}
 
 
 	public String json() {
@@ -128,6 +136,16 @@ public class RichText extends SendMessage {
 		protected String url;
 		protected String proxyUrl;
 		protected int width, height;
+		protected Embed owner;
+
+		protected Image(Embed _instance) {
+			owner = _instance;
+		}
+
+		public Embed end() {
+			return owner;
+		}
+
 
 		public Image setHeight(int _height) {
 			height = _height;
@@ -152,6 +170,7 @@ public class RichText extends SendMessage {
 
 
 	public static class Embed {
+
 		public String type;
 		protected String title;
 		protected String description;
@@ -161,10 +180,21 @@ public class RichText extends SendMessage {
 		protected Color color;
 		protected Author author;
 		protected Image thumbnail;
+		protected RichText owner;
 
-		public Embed setAuthor(Author _author) {
-			author = _author;
-			return this;
+
+		public Author author() { return (author = new Author(this)); }
+		public Image image() { return (image = new Image(this)); }
+		public Footer footer() { return (footer = new Footer(this)); }
+		public Image thumbnail() { return (thumbnail = new Image(this)); }
+
+
+		protected Embed(RichText _instance) {
+			owner = _instance;
+		}
+
+		public RichText end() {
+			return owner;
 		}
 
 		public Embed setColor(Color _color) {
@@ -177,18 +207,8 @@ public class RichText extends SendMessage {
 			return this;
 		}
 
-		public Embed setFooter(Footer _footer) {
-			footer = _footer;
-			return this;
-		}
-
 		public Embed setImage(Image _image) {
 			image = _image;
-			return this;
-		}
-
-		public Embed setThumbnail(Image _thumbnail) {
-			thumbnail = _thumbnail;
 			return this;
 		}
 
@@ -212,6 +232,16 @@ public class RichText extends SendMessage {
 	public static class Footer {
 		protected String text;
 		protected String iconUrl;
+		protected Embed owner;
+
+		protected Footer(Embed _instance) {
+			owner = _instance;
+		}
+
+		public Embed end() {
+			return owner;
+		}
+
 
 		public Footer setIconUrl(String _iconUrl) {
 			iconUrl = _iconUrl;
@@ -228,6 +258,26 @@ public class RichText extends SendMessage {
 		protected String name;
 		protected String url;
 		protected String iconUrl;
+		protected Embed owner;
+
+		protected Author(Embed _instance) {
+			owner = _instance;
+		}
+
+		public Embed end() {
+			return owner;
+		}
+
+		public Author(String _name, String _url, String _iconUrl) {
+			name = _name;
+			url = _url;
+			iconUrl = _iconUrl;
+		}
+
+		public Author(String _name, String _url) {
+			name = _name;
+			url = _url;
+		}
 
 		public Author setIconUrl(String _iconUrl) {
 			iconUrl = _iconUrl;
@@ -247,6 +297,7 @@ public class RichText extends SendMessage {
 
 
 	public static class Component {
+
 		protected ButtonStyle style = ButtonStyle.PRIMARY;
 		protected String label;
 		protected String url;
@@ -254,16 +305,23 @@ public class RichText extends SendMessage {
 		protected Emoji emoji;
 		protected int type = 2;
 		protected String customId;
+		protected RichText owner;
+
+		public Emoji emoji() { return (emoji = new Emoji(this)); }
+
+		protected Component(RichText _instance) {
+			owner = _instance;
+		}
+
+		public RichText end() {
+			return owner;
+		}
 
 		public Component setDisabled(boolean _disabled) {
 			disabled = _disabled;
 			return this;
 		}
 
-		public Component setEmoji(Emoji _emoji) {
-			emoji = _emoji;
-			return this;
-		}
 
 		public Component setLabel(String _label) {
 			label = _label;
@@ -329,6 +387,13 @@ public class RichText extends SendMessage {
 	public static class Emoji {
 		protected int id;
 		protected String name;
+		protected Component owner;
+
+		public Emoji(Component _instance) {
+			owner = _instance;
+		}
+
+		public Component end() {return  owner; }
 
 		public Emoji setId(int _id) {
 			id = _id;
@@ -342,6 +407,7 @@ public class RichText extends SendMessage {
 	}
 
 	public static class Button {
+
 		protected int style;
 		protected String label;
 		protected String customId;

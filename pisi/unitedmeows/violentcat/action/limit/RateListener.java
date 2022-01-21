@@ -4,6 +4,7 @@ import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.yystal.parallel.Async;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RateListener {
 	private Action.MajorParameter majorParameter;
@@ -15,7 +16,7 @@ public class RateListener {
 		majorParameter = _majorParameter;
 		maxRate = _maxRate;
 		resetInterval = _resetInterval;
-		actions = new ArrayList<>();
+		actions = new CopyOnWriteArrayList<Action<?>>();
 		specificRateMap = new HashMap<>();
 	}
 
@@ -23,13 +24,11 @@ public class RateListener {
 	protected List<Action<?>> actions;
 
 	public void tick() {
-		Iterator<Action<?>> actionIterator = actions.iterator();
-		while (actionIterator.hasNext()) {
-			Action<?> action = actionIterator.next();
+		for (Action<?> action : actions) {
 			SpecificRateListener channelRateLimit = specificRateListener(action.majorName());
 			if (!channelRateLimit.isRateLimited()) {
 				Async.async(action::run);
-				actionIterator.remove();
+				actions.remove(action);
 			}
 		}
 	}

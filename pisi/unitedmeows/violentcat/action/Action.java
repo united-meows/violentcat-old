@@ -66,6 +66,7 @@ public abstract class Action<Result> extends function {
 
 	public static enum MajorParameter {
 		GUILD_ID,
+		SEND_MESSAGE,
 		CHANNEL_ID,
 		WEBHOOK_ID,
 		GLOBAL,

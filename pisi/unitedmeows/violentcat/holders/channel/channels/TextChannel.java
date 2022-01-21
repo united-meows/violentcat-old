@@ -15,11 +15,11 @@ public class TextChannel extends Channel {
     }
 
     public Action<Boolean> sendMessage(String message) {
-        Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, id()) {
+        Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.SEND_MESSAGE, id()) {
             @Override
             public void run() {
-                client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/messages", String.format("{  \"content\": \"%s\", \"tts\": false}", message));
                 end(true);
+                client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/messages", String.format("{  \"content\": \"%s\", \"tts\": false}", message));
             }
         };
         client.discordActionPool().queue(action);
