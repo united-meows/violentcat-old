@@ -5,8 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
+import pisi.unitedmeows.violentcat.client.events.GuildMessageEvent;
 import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
+import pisi.unitedmeows.violentcat.holders.message.GuildMessage;
+import pisi.unitedmeows.violentcat.holders.user.BasicGuildUser;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 
 @RegisterSignal(op = 0)
@@ -37,6 +40,14 @@ public class MessageCreateSignal extends Signal {
         String joinDate = JsonUtil.getString(m.get("joined_at"));
         String hoistedRole = JsonUtil.getString(m.get("hoisted_role"));
         boolean deaf = JsonUtil.getBoolean(m.get("deaf"));
+
+        final BasicGuildUser basicGuildUser = new BasicGuildUser(client, authorId, username,
+                Integer.parseInt(discriminator), avatar, public_flags, joinDate, hoistedRole, mute, deaf);
+
+        final GuildMessage guildMessage = new GuildMessage(client, messageId, basicGuildUser, channel_id, content, tts,
+                guild_id);
+
+        client.eventSystem().fire(new GuildMessageEvent(basicGuildUser, guildMessage));
 
     }
 

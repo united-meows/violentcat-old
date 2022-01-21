@@ -8,6 +8,7 @@ import pisi.unitedmeows.yystal.utils.kThread;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class Action<Result> extends function {
 
@@ -21,6 +22,7 @@ public abstract class Action<Result> extends function {
 	protected String majorName;
 	protected DiscordActionPool actionPool;
 	protected RateListener rateListener;
+	protected Consumer<Result> afterTask;
 
 	public Action(DiscordActionPool _actionPool, MajorParameter _parameter, String _majorName) {
 		majorParameter = _parameter;
@@ -41,6 +43,9 @@ public abstract class Action<Result> extends function {
 		result = _result;
 		finished = true;
 		rateListener.end(majorName);
+		if (afterTask != null) {
+			afterTask.accept(result);
+		}
 	}
 
 	public Result await() {
@@ -52,6 +57,15 @@ public abstract class Action<Result> extends function {
 
 	public Action<Result> setTimeout(int _timeout) {
 		timeout = _timeout;
+		return this;
+	}
+
+	public Action<Result> then(Consumer<Result> _afterTask) {
+		if (afterTask != null)
+			afterTask = afterTask.andThen(_afterTask);
+		else
+			afterTask = _afterTask;
+
 		return this;
 	}
 
@@ -68,6 +82,7 @@ public abstract class Action<Result> extends function {
 		GUILD_ID,
 		SEND_MESSAGE,
 		CHANNEL_ID,
+		USER_ID,
 		WEBHOOK_ID,
 		GLOBAL,
 		OTHER;

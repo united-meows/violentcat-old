@@ -3,6 +3,7 @@ package pisi.unitedmeows.violentcat.client;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import pisi.unitedmeows.eventapi.system.BasicEventSystem;
 import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.action.DiscordActionPool;
 import pisi.unitedmeows.violentcat.client.gateway.DiscordClientGateway;
@@ -20,7 +21,6 @@ import pisi.unitedmeows.yystal.clazz.prop;
 import pisi.unitedmeows.yystal.utils.Capsule;
 import pisi.unitedmeows.yystal.utils.kThread;
 import pisi.unitedmeows.yystal.web.YWebClient;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -39,6 +39,7 @@ public class DiscordClient {
 	private ApplicationInfo applicationInfo;
 	protected DiscordActionPool discordActionPool;
 	protected DiscordClient _self;
+	protected BasicEventSystem eventSystem;
 
 	protected YWebClient webClient;
 	protected int intents = Intent.calculateBitmask(Intent.DIRECT_MESSAGES,
@@ -52,6 +53,7 @@ public class DiscordClient {
 		_self = this;
 		discordActionPool = new DiscordActionPool();
 		discordActionPool.start();
+		eventSystem = new BasicEventSystem();
 
 		try {
 			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
@@ -59,12 +61,16 @@ public class DiscordClient {
 
 	}
 
-	public void login(Capsule optional) {
+	public DiscordClient login(Capsule optional) {
 		clientGateway.connect();
 		clientGateway.login(token, optional);
+		return this;
 	}
 
 
+	public BasicEventSystem eventSystem() {
+		return eventSystem;
+	}
 
 	public DiscordClient setPresence(Presence _presence) {
 		presence = _presence;
@@ -141,19 +147,28 @@ public class DiscordClient {
 		return action;
 	}
 
-	public DiscordUser getUser(String id) {
-		String jsonResult = webClient.downloadString("https://discord.com/api/v9/users/" + id);
-		JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
-		final String userId = JsonUtil.getString(data.get("id"));
-		final String userName = JsonUtil.getString(data.get("username"));
-		final String avatarId = JsonUtil.getString(data.get("avatar"));
-		final int discriminator = JsonUtil.getInt(data.get("discriminator"));
-		final int publicFlags = JsonUtil.getInt(data.get("public_flags"));
-		final String banner = JsonUtil.getString(data.get("banner"));
-		final String bannerColor = JsonUtil.getString(data.get("banner_color"));
-		final String accent_color = JsonUtil.getString(data.get("accent_color"));
+	public Action<DiscordUser> getUser(String id) {
+		Action<DiscordUser> userAction = new Action<DiscordUser>(discordActionPool(), Action.MajorParameter.USER_ID, id) {
+			@Override
+			public void run() {
+				String jsonResult = webClient.downloadString("https://discord.com/api/v9/users/" + id);
+				JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
+				final String userId = JsonUtil.getString(data.get("id"));
+				final String userName = JsonUtil.getString(data.get("username"));
+				final String avatarId = JsonUtil.getString(data.get("avatar"));
+				final int discriminator = JsonUtil.getInt(data.get("discriminator"));
+				final int publicFlags = JsonUtil.getInt(data.get("public_flags"));
+				final String banner = JsonUtil.getString(data.get("banner"));
+				final String bannerColor = JsonUtil.getString(data.get("banner_color"));
+				final String accent_color = JsonUtil.getString(data.get("accent_color"));
 
-		return new DiscordUser(userId, userName, avatarId, discriminator, publicFlags, banner, bannerColor, accent_color);
+				end(new DiscordUser(_self, userId, userName, avatarId, discriminator, publicFlags, banner, bannerColor,
+						accent_color));
+			}
+		};
+
+		discordActionPool.queue(userAction);
+		return userAction;
 	}
 
 	public SelfUser selfUser() {
@@ -193,8 +208,8 @@ public class DiscordClient {
 		this.applicationInfo = applicationInfo;
 	}
 
-	public void login() {
-		login(Capsule.of());
+	public DiscordClient login() {
+		return login(Capsule.of());
 	}
 
 	public DiscordClientGateway clientGateway() {

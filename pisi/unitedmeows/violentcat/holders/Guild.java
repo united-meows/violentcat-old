@@ -168,6 +168,28 @@ public class Guild {
     }
 
 
+
+    public <X extends TextChannel> Action<X> getTextChannel(String channelId) {
+        return getChannel(channelId);
+    }
+
+    public <X extends VoiceChannel> Action<X> getVoiceChannel(String channelId) {
+        return getChannel(channelId);
+    }
+
+    public <X extends NewsChannel> Action<X> getNewsChannel(String channelId) {
+        return getChannel(channelId);
+    }
+
+    public <X extends StageChannel> Action<X> getStageChannel(String channelId) {
+        return getChannel(channelId);
+    }
+
+    public <X extends CategoryChannel> Action<X> getCategory(String channelId) {
+        return getChannel(channelId);
+    }
+
+    @SuppressWarnings("unchecked")
     public <X extends Channel> Action<X> getChannel(String channelId) {
         Action<X> action = new Action<X>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, channelId) {
             @Override
@@ -176,7 +198,6 @@ public class Guild {
                 channelsAsIterable(x -> {
                     System.out.println(x.id());
                     if (x.id().equalsIgnoreCase(channelId)) {
-                        System.out.println("found");
                         channel.set((X) x);
                         return false;
                     }

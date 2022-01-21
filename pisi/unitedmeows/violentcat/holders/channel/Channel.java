@@ -3,6 +3,7 @@ package pisi.unitedmeows.violentcat.holders.channel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.holders.Invite;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
@@ -52,41 +53,84 @@ public class Channel {
         type = _type;
     }
 
-    public Invite createInvite(int maxAge, int maxUses, boolean temporary, boolean unique) {
-        Gson gson = new Gson();
-        JsonObject data = new JsonObject();
-        data.addProperty("max_age", maxAge);
-        data.addProperty("max_uses", maxUses);
-        data.addProperty("temporary", temporary);
-        data.addProperty("unique", unique);
-        client.webClient().postRequest("https://discord.com/api/v9/channels/" + id + "/invites", gson.toJson(data));
-        return null;
+    public Action<Invite> createInvite(int maxAge, int maxUses) {
+        return createInvite(maxAge, maxUses, false, true);
     }
 
-    public Invite getInvite() {
-        String jsonResult = client.webClient().downloadString("https://discord.com/api/v9/channels/" + id + "/invites");
-        JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
-        JsonObject c = data.getAsJsonObject("channel");
-        JsonObject i = data.getAsJsonObject("inviter");
+    public Action<Invite> createInvite(int maxAge, int maxUses, boolean temporary, boolean unique) {
+        Action<Invite> action = new Action<Invite>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, id) {
+            @Override
+            public void run() {
+                Gson gson = new Gson();
+                JsonObject requestData = new JsonObject();
+                requestData.addProperty("max_age", maxAge);
+                requestData.addProperty("max_uses", maxUses);
+                requestData.addProperty("temporary", temporary);
+                requestData.addProperty("unique", unique);
+                final String jsonResult = client.webClient().postRequest("https://discord.com/api/v9/channels/" +
+                        id + "/invites", gson.toJson(requestData));
+                JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
+                JsonObject c = data.getAsJsonObject("channel");
+                JsonObject i = data.getAsJsonObject("inviter");
 
-        String code = JsonUtil.getString(data.get("code"));
-        int type = JsonUtil.getInt(data.get("type"));
-        String expires_at = JsonUtil.getString(data.get("expires_at"));
-        String channelId = JsonUtil.getString(c.get("id"));
-        String channelName = JsonUtil.getString(c.get("name"));
-        int channelType = JsonUtil.getInt(c.get("type"));
-        String id = JsonUtil.getString(i.get("id"));
-        String username =  JsonUtil.getString(i.get("username"));
-        String avatar = JsonUtil.getString(i.get("avatar"));
-        String discriminator = JsonUtil.getString(i.get("discriminator"));
-        int public_flags = JsonUtil.getInt(i.get("public_flags"));
-        boolean bot = JsonUtil.getBoolean(i.get("bot"));
-        int uses = JsonUtil.getInt(data.get("uses"));
-        int max_uses = JsonUtil.getInt(data.get("max_uses"));
-        int max_age = JsonUtil.getInt(data.get("max_age"));
-        boolean temporary = JsonUtil.getBoolean(data.get("temporary"));
-        String created_at = JsonUtil.getString(data.get("created_at"));
-        return new Invite(code, type, expires_at, uses, max_uses, max_age, temporary, created_at, channelId, channelName, channelType, id, username, avatar, discriminator, public_flags, bot);
+                String code = JsonUtil.getString(data.get("code"));
+                int type = JsonUtil.getInt(data.get("type"));
+                String expires_at = JsonUtil.getString(data.get("expires_at"));
+                String channelId = JsonUtil.getString(c.get("id"));
+                String channelName = JsonUtil.getString(c.get("name"));
+                int channelType = JsonUtil.getInt(c.get("type"));
+                String id = JsonUtil.getString(i.get("id"));
+                String username =  JsonUtil.getString(i.get("username"));
+                String avatar = JsonUtil.getString(i.get("avatar"));
+                String discriminator = JsonUtil.getString(i.get("discriminator"));
+                int public_flags = JsonUtil.getInt(i.get("public_flags"));
+                boolean bot = JsonUtil.getBoolean(i.get("bot"));
+                int uses = JsonUtil.getInt(data.get("uses"));
+                int max_uses = JsonUtil.getInt(data.get("max_uses"));
+                int max_age = JsonUtil.getInt(data.get("max_age"));
+                boolean temporaryR = JsonUtil.getBoolean(data.get("temporary"));
+                String created_at = JsonUtil.getString(data.get("created_at"));
+                end(new Invite(code, type, expires_at, uses, max_uses, max_age, temporaryR, created_at, channelId,
+                        channelName, channelType, id, username, avatar, discriminator, public_flags, bot));
+            }
+        };
+        client.discordActionPool().queue(action);
+        return action;
+    }
+
+    public Action<Invite> getInvite() {
+        Action<Invite> action = new Action<Invite>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, id) {
+            @Override
+            public void run() {
+                String jsonResult = client.webClient().downloadString("https://discord.com/api/v9/channels/" +
+                        id + "/invites");
+                JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
+                JsonObject c = data.getAsJsonObject("channel");
+                JsonObject i = data.getAsJsonObject("inviter");
+
+                String code = JsonUtil.getString(data.get("code"));
+                int type = JsonUtil.getInt(data.get("type"));
+                String expires_at = JsonUtil.getString(data.get("expires_at"));
+                String channelId = JsonUtil.getString(c.get("id"));
+                String channelName = JsonUtil.getString(c.get("name"));
+                int channelType = JsonUtil.getInt(c.get("type"));
+                String id = JsonUtil.getString(i.get("id"));
+                String username =  JsonUtil.getString(i.get("username"));
+                String avatar = JsonUtil.getString(i.get("avatar"));
+                String discriminator = JsonUtil.getString(i.get("discriminator"));
+                int public_flags = JsonUtil.getInt(i.get("public_flags"));
+                boolean bot = JsonUtil.getBoolean(i.get("bot"));
+                int uses = JsonUtil.getInt(data.get("uses"));
+                int max_uses = JsonUtil.getInt(data.get("max_uses"));
+                int max_age = JsonUtil.getInt(data.get("max_age"));
+                boolean temporary = JsonUtil.getBoolean(data.get("temporary"));
+                String created_at = JsonUtil.getString(data.get("created_at"));
+                end(new Invite(code, type, expires_at, uses, max_uses, max_age, temporary, created_at, channelId,
+                        channelName, channelType, id, username, avatar, discriminator, public_flags, bot));
+            }
+        };
+        client.discordActionPool().queue(action);
+        return action;
     }
 
     public String id() {
@@ -101,7 +145,7 @@ public class Channel {
         GUILD_STORE(6),
         GUILD_NEWS_THREAD(10),
         GUILD_PUBLIC_THREAD(11),
-        GULD_PRIVATE_THREAD(12),
+        GUILD_PRIVATE_THREAD(12),
         GUILD_STAGE_VOICE(13);
 
         int id;

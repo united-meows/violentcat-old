@@ -47,5 +47,26 @@ public class Invite {
         this.bot = _bot;
     }
 
-
+    @Override
+    public String toString() {
+        return "Invite{" +
+                "code='" + code + '\'' +
+                ", type=" + type +
+                ", expiresAt='" + expiresAt + '\'' +
+                ", uses=" + uses +
+                ", maxUses=" + maxUses +
+                ", maxAge=" + maxAge +
+                ", temporary=" + temporary +
+                ", createdAt='" + createdAt + '\'' +
+                ", channelId='" + channelId + '\'' +
+                ", channelName='" + channelName + '\'' +
+                ", channelType=" + channelType +
+                ", id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", discriminator='" + discriminator + '\'' +
+                ", publicFlags=" + publicFlags +
+                ", bot=" + bot +
+                '}';
+    }
 }
