@@ -22,6 +22,10 @@ public class SpecificRateListener {
 		executedMillis.add(System.currentTimeMillis());
 	}
 
+	public void addNoRate() {
+		tempOnList--;
+	}
+
 	protected boolean isRateLimited() {
 		executedMillis.removeIf(time -> System.currentTimeMillis() - time >= resetInterval);
 		boolean state = executedMillis.size() + tempOnList < rateLimit;

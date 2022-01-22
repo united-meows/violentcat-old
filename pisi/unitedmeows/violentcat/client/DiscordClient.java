@@ -111,7 +111,7 @@ public class DiscordClient {
 					Guild guild = _GUILD_CACHE.getIfPresent(guildId);
 					if (guild != null) {
 						System.out.println("got from cache");
-						end(guild);
+						endNoRate(guild);
 						return;
 					}
 				}

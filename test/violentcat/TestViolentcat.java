@@ -23,10 +23,6 @@ import static pisi.unitedmeows.yystal.parallel.Async.*;
 public class TestViolentcat {
 
 	public static void main(String[] args) {
-
-		WebhookClient webhookClient = new WebhookClient("WEBHOOK_HERE");
-		webhookClient.send(RichText.create().createEmbed().setColor(Color.pink).setTitle("ez").setDescription("cat").end());
-
 		String tokenDecode = "T1RNeE1UZ3dOREEzTmprNU9UVTVPRGM0LlllQXJWUS50LVU0Qmh3cWxaZ0l0M0dkSWdaaXBfUGJ3ZVE=";
 
 		DiscordClient discordClient = new DiscordClient(AccountType.BOT,

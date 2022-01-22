@@ -205,7 +205,7 @@ public class Guild {
                     Channel cacheChannel = Channel._CHANNEL_CACHE.getIfPresent(channelId);
                     if (cacheChannel != null) {
                         System.out.println("got from cache channel");
-                        end((X) cacheChannel);
+                        endNoRate((X) cacheChannel);
                         return;
                     }
                 }

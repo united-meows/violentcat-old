@@ -48,6 +48,15 @@ public abstract class Action<Result> extends function {
 		}
 	}
 
+	public void endNoRate(Result _result) {
+		result = _result;
+		finished = true;
+		rateListener.endNoRate(majorName);
+		if (afterTask != null) {
+			afterTask.accept(result);
+		}
+	}
+
 	public Result await() {
 		while (!finished && !timer.isReached(timeout)) {
 			kThread.sleep(1);

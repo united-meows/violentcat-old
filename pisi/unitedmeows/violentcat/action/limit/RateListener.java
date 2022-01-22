@@ -39,6 +39,12 @@ public class RateListener {
 			specificRateListener.add();
 	}
 
+	public void endNoRate(String majorName) {
+		SpecificRateListener specificRateListener = specificRateMap.getOrDefault(majorName, null);
+		if (specificRateListener != null)
+			specificRateListener.addNoRate();
+	}
+
 	public void queue(Action<?> action) {
 		actions.add(action);
 	}
