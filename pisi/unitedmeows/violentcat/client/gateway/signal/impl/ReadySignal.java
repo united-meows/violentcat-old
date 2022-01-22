@@ -2,6 +2,7 @@ package pisi.unitedmeows.violentcat.client.gateway.signal.impl;
 
 import com.google.gson.JsonObject;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
+import pisi.unitedmeows.violentcat.client.events.ReadyEvent;
 import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
 import pisi.unitedmeows.violentcat.holders.ApplicationInfo;
@@ -10,7 +11,7 @@ import pisi.unitedmeows.violentcat.utils.JsonUtil;
 
 @RegisterSignal(op = Signal.SIGNAL_READY)
 public class ReadySignal extends Signal {
-    
+
     @Override
     public void read(DiscordClient client, JsonObject data) {
         boolean verified = data.getAsJsonObject("user").get("verified").getAsBoolean();
@@ -27,8 +28,8 @@ public class ReadySignal extends Signal {
 
         int applicationId = JsonUtil.getInt(data.getAsJsonObject("application").get("id"));
         int applicationFlags = JsonUtil.getInt(data.getAsJsonObject("application").get("flags"));
-
-       client.setApplicationInfo(new ApplicationInfo(applicationId, applicationFlags));
+        client.setApplicationInfo(new ApplicationInfo(applicationId, applicationFlags));
+        client.eventSystem().fire(new ReadyEvent(client.applicationInfo(), client.selfUser()));
     }
 
     @Override

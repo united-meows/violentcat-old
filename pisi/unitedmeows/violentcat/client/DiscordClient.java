@@ -238,8 +238,20 @@ public class DiscordClient {
 		this.applicationInfo = applicationInfo;
 	}
 
+	public ApplicationInfo applicationInfo() {
+		return applicationInfo;
+	}
+
 	public DiscordClient login() {
 		return login(Capsule.of());
+	}
+
+	public DiscordClient awaitReady() {
+		while (applicationInfo == null) {
+			kThread.sleep(50);
+		}
+
+		return this;
 	}
 
 	public DiscordClient addListener(Object o) {

@@ -14,6 +14,10 @@ public class JsonUtil {
 		return jsonElement == JsonNull.INSTANCE ? -1 : jsonElement.getAsInt();
 	}
 
+	public static long getLong(JsonElement jsonElement) {
+		return jsonElement == JsonNull.INSTANCE ? -1 : jsonElement.getAsLong();
+	}
+
 
 	public static boolean getBoolean(JsonElement jsonElement) {
 		return jsonElement == JsonNull.INSTANCE ? null : jsonElement.getAsBoolean();

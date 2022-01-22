@@ -19,7 +19,6 @@ public class GuildMessage extends Message {
                         String _guildId) {
         super(_client, _id, _sender, _content, _tts);
 
-
         guildId = _guildId;
         channelId = _channelId;
     }

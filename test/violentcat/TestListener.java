@@ -10,7 +10,6 @@ public class TestListener {
 		System.out.println("received event");
 		if (event.guildMessage().content().startsWith("!ping")) {
 			TextChannel channel = event.guildMessage().textChannel().await();;
-
 			channel.sendMessage("pong");
 			event.guildMessage().pinMessage();
 		}
