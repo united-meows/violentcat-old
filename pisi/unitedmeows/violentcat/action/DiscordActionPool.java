@@ -27,7 +27,7 @@ public class DiscordActionPool extends Thread {
 			channelRateListener.tick();
 			guildRateListener.tick();
 			messageRateListener.tick();
-			kThread.sleep(100);
+			kThread.sleep(25);
 		}
 	}
 

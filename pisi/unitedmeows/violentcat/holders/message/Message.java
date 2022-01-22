@@ -20,6 +20,8 @@ public class Message {
 		tts = _tts;
 	}
 
+
+
 	public boolean tts() {
 		return tts;
 	}

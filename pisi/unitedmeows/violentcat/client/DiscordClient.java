@@ -242,6 +242,11 @@ public class DiscordClient {
 		return login(Capsule.of());
 	}
 
+	public DiscordClient addListener(Object o) {
+		eventSystem.subscribeAll(o);
+		return this;
+	}
+
 	public DiscordClientGateway clientGateway() {
 		return clientGateway;
 	}
