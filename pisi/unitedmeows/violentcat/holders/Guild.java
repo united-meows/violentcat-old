@@ -1,8 +1,10 @@
 package pisi.unitedmeows.violentcat.holders;
 
+import com.github.benmanes.caffeine.cache.Cache;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import pisi.unitedmeows.violentcat.action.Action;
+import pisi.unitedmeows.violentcat.action.RequestType;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.holders.channel.Channel;
 import pisi.unitedmeows.violentcat.holders.channel.channels.*;
@@ -49,7 +51,6 @@ public class Guild {
     protected int nsfwLevel;
     /* emojis */
     /* stickers */
-
 
     protected DiscordClient client;
 
@@ -169,34 +170,49 @@ public class Guild {
 
 
 
-    public <X extends TextChannel> Action<X> getTextChannel(String channelId) {
-        return getChannel(channelId);
-    }
+    public <X extends TextChannel> Action<X> getTextChannel(String channelId) { return getChannel(channelId); }
+    public <X extends TextChannel> Action<X> getTextChannel(String channelId, RequestType requestType)
+    { return getChannel(channelId, requestType); }
 
-    public <X extends VoiceChannel> Action<X> getVoiceChannel(String channelId) {
-        return getChannel(channelId);
-    }
+    public <X extends VoiceChannel> Action<X> getVoiceChannel(String channelId) { return getChannel(channelId); }
+    public <X extends VoiceChannel> Action<X> getVoiceChannel(String channelId, RequestType requestType)
+    { return getChannel(channelId, requestType); }
 
-    public <X extends NewsChannel> Action<X> getNewsChannel(String channelId) {
-        return getChannel(channelId);
-    }
+    public <X extends NewsChannel> Action<X> getNewsChannel(String channelId) { return getChannel(channelId); }
+    public <X extends NewsChannel> Action<X> getNewsChannel(String channelId, RequestType requestType)
+    { return getChannel(channelId, requestType); }
 
-    public <X extends StageChannel> Action<X> getStageChannel(String channelId) {
-        return getChannel(channelId);
-    }
+    public <X extends StageChannel> Action<X> getStageChannel(String channelId) { return getChannel(channelId); }
+    public <X extends StageChannel> Action<X> getStageChannel(String channelId, RequestType requestType)
+    { return getChannel(channelId, requestType); }
 
-    public <X extends CategoryChannel> Action<X> getCategory(String channelId) {
-        return getChannel(channelId);
-    }
+    public <X extends CategoryChannel> Action<X> getCategory(String channelId) { return getChannel(channelId); }
+    public <X extends CategoryChannel> Action<X> getCategory(String channelId, RequestType requestType)
+    { return getChannel(channelId, requestType); }
+
 
     @SuppressWarnings("unchecked")
     public <X extends Channel> Action<X> getChannel(String channelId) {
+        return getChannel(channelId, RequestType.CACHE_THEN_REQUEST);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <X extends Channel> Action<X> getChannel(String channelId, RequestType requestType) {
         Action<X> action = new Action<X>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, channelId) {
             @Override
             public void run() {
+                if (requestType == RequestType.CACHE_THEN_REQUEST) {
+                    Channel cacheChannel = Channel._CHANNEL_CACHE.getIfPresent(channelId);
+                    if (cacheChannel != null) {
+                        System.out.println("got from cache channel");
+                        end((X) cacheChannel);
+                        return;
+                    }
+                }
+
                 AtomicReference<X> channel = new AtomicReference<>(null);
                 channelsAsIterable(x -> {
-                    System.out.println(x.id());
+                    Channel._CHANNEL_CACHE.put(x.id(), x);
                     if (x.id().equalsIgnoreCase(channelId)) {
                         channel.set((X) x);
                         return false;

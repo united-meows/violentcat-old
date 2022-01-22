@@ -1,5 +1,7 @@
 package pisi.unitedmeows.violentcat.holders.channel;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -7,6 +9,8 @@ import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.holders.Invite;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
+
+import java.time.Duration;
 
 public class Channel {
 
@@ -20,6 +24,14 @@ public class Channel {
     protected int user_limit;
     protected boolean nsfw;
     protected Type type;
+
+    public static final Cache<String, Channel> _CHANNEL_CACHE;
+
+    static {
+        _CHANNEL_CACHE =  Caffeine.newBuilder().maximumSize(500)
+                .expireAfterWrite(Duration.ofSeconds(30))
+                .build();
+    }
 
 
     protected DiscordClient client;

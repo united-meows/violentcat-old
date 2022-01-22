@@ -29,6 +29,12 @@ public class RichText extends SendMessage {
 		return new RichText();
 	}
 
+	@Override
+	public RichText setContent(String _content) {
+		content = _content;
+		return this;
+	}
+
 	public Embed createEmbed() {
 		Embed embed = new Embed(this);
 		embeds.add(embed);
@@ -43,6 +49,10 @@ public class RichText extends SendMessage {
 
 
 	public String json() {
+		return gson.toJson(jsonRaw());
+	}
+
+	public JsonObject jsonRaw() {
 		JsonObject json = new JsonObject();
 		json.addProperty("content", content);
 
@@ -128,8 +138,7 @@ public class RichText extends SendMessage {
 
 			json.add("components", mainComponents);
 		}
-		System.out.println(gson.toJson(json));
-		return gson.toJson(json);
+		return json;
 	}
 
 	public static class Image {

@@ -1,11 +1,15 @@
 package pisi.unitedmeows.violentcat.client;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import pisi.unitedmeows.eventapi.system.BasicEventSystem;
 import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.action.DiscordActionPool;
+import pisi.unitedmeows.violentcat.action.RequestType;
 import pisi.unitedmeows.violentcat.client.gateway.DiscordClientGateway;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.IdentifySignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.PresenceUpdateSignal;
@@ -23,6 +27,7 @@ import pisi.unitedmeows.yystal.utils.kThread;
 import pisi.unitedmeows.yystal.web.YWebClient;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 
 public class DiscordClient {
 
@@ -46,6 +51,14 @@ public class DiscordClient {
 			Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS, Intent.GUILD_BANS,
 			Intent.GUILDS);
 
+	protected static Cache<String, Guild> _GUILD_CACHE;
+
+	static {
+		_GUILD_CACHE = Caffeine.newBuilder().maximumSize(100)
+				.expireAfterWrite(Duration.ofMinutes(2))
+				.build();
+	}
+
 	public DiscordClient(AccountType _accountType, String _token) {
 		accountType = _accountType;
 		token = _token;
@@ -58,7 +71,6 @@ public class DiscordClient {
 		try {
 			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
 		} catch (Exception ex) {}
-
 	}
 
 	public DiscordClient login(Capsule optional) {
@@ -84,11 +96,26 @@ public class DiscordClient {
 		return token;
 	}
 
-	/* add missing array elements */
 	public Action<Guild> getGuild(String guildId) {
+		return getGuild(guildId, RequestType.CACHE_THEN_REQUEST);
+	}
+
+
+	/* add missing array elements */
+	public Action<Guild> getGuild(String guildId, final RequestType requestType) {
 		Action<Guild> action =  new Action<Guild>(discordActionPool(), Action.MajorParameter.GUILD_ID, guildId) {
 			@Override
 			public void run() {
+
+				if (requestType == RequestType.CACHE_THEN_REQUEST) {
+					Guild guild = _GUILD_CACHE.getIfPresent(guildId);
+					if (guild != null) {
+						System.out.println("got from cache");
+						end(guild);
+						return;
+					}
+				}
+
 				String jsonResult = webClient.downloadString("https://discord.com/api/v9/guilds/" + guildId);
 				JsonObject data = new JsonParser().parse(jsonResult).getAsJsonObject();
 				JsonArray jsonArray = data.getAsJsonArray("emojis");
@@ -134,13 +161,16 @@ public class DiscordClient {
 				boolean nsfw = JsonUtil.getBoolean(data.get("nsfw"));
 				int nsfw_level = JsonUtil.getInt(data.get("nsfw_level"));
 
-				/* add to cache */
-				end(new Guild(_self, id, name, icon, desc, splash, discovery_splash, banner, owner_id,
+				Guild guild = new Guild(_self, id, name, icon, desc, splash, discovery_splash, banner, owner_id,
 						application_id, region, afk_channel_id, afk_timeout, system_channel_id, widget_enabled,
 						widget_channel_id, verification_level, default_message_notifications, mfa_level,
 						explicit_content_filter, max_presences, max_members, max_video_channel_users, vanity_url_code,
 						premium_tier, premium_subscription_count, system_channel_flags, preferred_locale, rules_channel_id,
-						public_updates_channel_id, hub_type, premium_progress_bar_enabled, nsfw, nsfw_level));
+						public_updates_channel_id, hub_type, premium_progress_bar_enabled, nsfw, nsfw_level);
+
+				_GUILD_CACHE.put(id, guild);
+				/* add to cache */
+				end(guild);
 			}
 		};
 		discordActionPool.queue(action);

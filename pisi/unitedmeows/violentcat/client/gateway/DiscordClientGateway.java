@@ -69,7 +69,7 @@ public class DiscordClientGateway extends WebSocketClient {
 				capsule.getOrDefault("device", "violentcat"),
 				capsule.getOrDefault("largethreshold", -1),
 				capsule.getOrDefault("shards", null));
-
+		System.out.println(client.intents());
 		send(identifySignal);
 	}
 
