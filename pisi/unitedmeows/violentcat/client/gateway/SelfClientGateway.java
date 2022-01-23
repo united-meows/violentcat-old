@@ -27,7 +27,7 @@ public class SelfClientGateway extends WebSocketClient {
 	protected Queue<String> sendQueue;
 	private Thread sendThread;
 
-	public SelfClientGateway(URI serverUri) {
+	public 	SelfClientGateway(URI serverUri) {
 		super(serverUri);
 		sendQueue = new ArrayDeque<>();
 	}
