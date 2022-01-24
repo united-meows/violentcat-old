@@ -110,11 +110,11 @@ public class Channel {
         return action;
     }
 
-    public Action<Boolean> deleteChannel(String channelId) {
+    public Action<Boolean> deleteChannel() {
         Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, id) {
             @Override
             public void run() {
-                client.webClient().deleteRequest("https://discord.com/api/v9/channels/" + channelId);
+                client.webClient().deleteRequest("https://discord.com/api/v9/channels/" + id);
                 end(true);
             }
         };

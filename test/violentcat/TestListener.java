@@ -11,7 +11,7 @@ public class TestListener {
 		if (event.guildMessage().content().startsWith("!deletechannel")) {
 			TextChannel channel = event.guildMessage().textChannel().await();;
 			channel.sendMessage("deleting channel");
-			event.guildMessage().textChannel().await().deleteChannel("932026414641848360");
+			event.guildMessage().textChannel().await().deleteChannel();
 		}
 	});
 
