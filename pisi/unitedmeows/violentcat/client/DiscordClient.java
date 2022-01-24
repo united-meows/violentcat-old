@@ -3,6 +3,7 @@ package pisi.unitedmeows.violentcat.client;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,6 +17,7 @@ import pisi.unitedmeows.violentcat.client.gateway.signal.impl.PresenceUpdateSign
 import pisi.unitedmeows.violentcat.holders.ApplicationInfo;
 import pisi.unitedmeows.violentcat.holders.Guild;
 import pisi.unitedmeows.violentcat.holders.Presence;
+import pisi.unitedmeows.violentcat.slashcmd.SlashCommandCreator;
 import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.violentcat.user.DiscordUser;
 import pisi.unitedmeows.violentcat.user.SelfUser;
@@ -68,12 +70,15 @@ public class DiscordClient {
 		discordActionPool.start();
 		eventSystem = new BasicEventSystem();
 
-		try {
-			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
-		} catch (Exception ex) {}
 	}
 
 	public DiscordClient login(Capsule optional) {
+		//TODO: PARSE THIS AND SET TO 'ApplicationInfo' (modify it)
+		String result = webClient.downloadString("https://discord.com/api/v9/oauth2/applications/@me");
+		System.out.println(result);
+		try {
+			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
+		} catch (Exception ex) {}
 		clientGateway.connect();
 		clientGateway.login(token, optional);
 		return this;
@@ -110,7 +115,6 @@ public class DiscordClient {
 				if (requestType == RequestType.CACHE_THEN_REQUEST) {
 					Guild guild = _GUILD_CACHE.getIfPresent(guildId);
 					if (guild != null) {
-						System.out.println("got from cache");
 						endNoRate(guild);
 						return;
 					}
@@ -199,6 +203,26 @@ public class DiscordClient {
 
 		discordActionPool.queue(userAction);
 		return userAction;
+	}
+
+	/* change to action<SlashCommand> */
+	public Action<Boolean> createSlashCommand(SlashCommandCreator commandCreator) {
+
+		Action<Boolean> action = new Action<Boolean>(discordActionPool(), Action.MajorParameter.APPLICATION_ID,
+				String.valueOf("931180407699959878")) {
+			@Override
+			public void run() {
+				Gson gson = new Gson();
+				String json = gson.toJson(commandCreator.json());
+				System.out.println(json);
+				String result = webClient.postRequest(String.format("https://discord.com/api/v9/applications/%s/commands",
+						"931180407699959878"), json);
+				System.out.println(result);
+				end(true);
+			}
+		};
+		action.queue();
+		return action;
 	}
 
 	public SelfUser selfUser() {

@@ -33,6 +33,10 @@ public abstract class Action<Result> extends function {
 		timer.reset();
 	}
 
+	public void queue() {
+		actionPool.queue(this);
+	}
+
 
 	public void pre(RateListener _rateListener) {
 		rateListener = _rateListener;
@@ -92,6 +96,7 @@ public abstract class Action<Result> extends function {
 		SEND_MESSAGE,
 		CHANNEL_ID,
 		USER_ID,
+		APPLICATION_ID,
 		WEBHOOK_ID,
 		GLOBAL,
 		OTHER;

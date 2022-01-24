@@ -14,6 +14,7 @@ import pisi.unitedmeows.violentcat.utils.Intent;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.parallel.Promise;
 import pisi.unitedmeows.yystal.utils.Capsule;
+import pisi.unitedmeows.yystal.utils.Stopwatch;
 import pisi.unitedmeows.yystal.utils.kThread;
 
 import static pisi.unitedmeows.yystal.parallel.Async.*;
@@ -52,13 +53,15 @@ public class DiscordClientGateway extends WebSocketClient {
 		}
 	}
 
-	private Promise heartBeatPromise;
+	private long heartbeatInterval;
+	private Stopwatch heartbeatWatcher;
 
 	public DiscordClientGateway(DiscordClient _client, URI serverUri)
 	{
 		super(serverUri);
 		client = _client;
 		sendQueue = new ArrayDeque<>();
+		heartbeatWatcher = new Stopwatch();
 	}
 
 	public void login(String token, Capsule capsule) {
@@ -77,14 +80,8 @@ public class DiscordClientGateway extends WebSocketClient {
 		login(token, Capsule.of());
 	}
 
-	public void setupHeartbeat(long miliseconds) {
-		if (heartBeatPromise != null) {
-			heartBeatPromise.stop();
-		}
-		heartBeatPromise = async_loop(() -> {
-			/* sending heartbeat ack */
-			send(new HeartbeatAckSignal());
-		}, miliseconds > 200 ?  miliseconds - 50 : miliseconds);
+	public void setupHeartbeat(long milliseconds) {
+		heartbeatInterval = milliseconds;
 	}
 
 	@Override
@@ -102,6 +99,11 @@ public class DiscordClientGateway extends WebSocketClient {
 				System.out.println("SENDING >> " + data);
 				send(data);
 
+			}
+
+			if (heartbeatInterval > 0 && heartbeatWatcher.isReached(heartbeatInterval)) {
+				send(new HeartbeatAckSignal());
+				heartbeatWatcher.reset();
 			}
 			kThread.sleep(QUEUE_DELAY);
 		}
@@ -123,7 +125,6 @@ public class DiscordClientGateway extends WebSocketClient {
 	}
 
 	public void close() {
-		heartBeatPromise.stop();
 		super.close();
 	}
 
