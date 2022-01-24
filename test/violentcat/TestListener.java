@@ -8,10 +8,10 @@ public class TestListener {
 
 	public Listener<GuildMessageEvent> guildMessageEventListener = new Listener<>(event -> {
 		System.out.println("received event");
-		if (event.guildMessage().content().startsWith("!ping")) {
+		if (event.guildMessage().content().startsWith("!deletechannel")) {
 			TextChannel channel = event.guildMessage().textChannel().await();;
-			channel.sendMessage("pong");
-			event.guildMessage().pinMessage();
+			channel.sendMessage("deleting channel");
+			event.guildMessage().textChannel().await().deleteChannel("932026414641848360");
 		}
 	});
 

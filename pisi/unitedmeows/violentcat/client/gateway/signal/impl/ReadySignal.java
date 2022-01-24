@@ -26,9 +26,6 @@ public class ReadySignal extends Signal {
 
         client.setSelfUser(new SelfUser(verified, mfa, bot, username, email, avatar, id, flags, discriminator));
 
-        int applicationId = JsonUtil.getInt(data.getAsJsonObject("application").get("id"));
-        int applicationFlags = JsonUtil.getInt(data.getAsJsonObject("application").get("flags"));
-        client.setApplicationInfo(new ApplicationInfo(applicationId, applicationFlags));
         client.eventSystem().fire(new ReadyEvent(client.applicationInfo(), client.selfUser()));
     }
 
