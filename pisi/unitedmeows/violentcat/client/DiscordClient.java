@@ -73,10 +73,27 @@ public class DiscordClient {
 	}
 
 	public DiscordClient login(Capsule optional) {
-/*		TODO: PARSE THIS AND SET TO 'ApplicationInfo' (modify it)
 		String result = webClient.downloadString("https://discord.com/api/v9/oauth2/applications/@me");
-		System.out.println(result);*/
-
+		JsonObject data = new JsonParser().parse(result).getAsJsonObject();
+		JsonObject o = data.getAsJsonObject("owner");
+		String id = JsonUtil.getString(data.get("id"));
+		String name = JsonUtil.getString(data.get("name"));
+		String icon = JsonUtil.getString(data.get("icon"));
+		String description = JsonUtil.getString(data.get("description"));
+		String summary = JsonUtil.getString(data.get("summary"));
+		boolean hook = JsonUtil.getBoolean(data.get("hook"));
+		boolean bot_public = JsonUtil.getBoolean(data.get("bot_public"));
+		boolean bot_require_code_grant = JsonUtil.getBoolean(data.get("bot_require_code_grant"));
+		String verify_key = JsonUtil.getString(data.get("verify_key"));
+		String owner_id = JsonUtil.getString(o.get("id"));
+		String username = JsonUtil.getString(o.get("username"));
+		String avatar = JsonUtil.getString(o.get("avatar"));
+		String discriminator = JsonUtil.getString(o.get("discriminator"));
+		int public_flags = JsonUtil.getInt(o.get("public_flags"));
+		int ownerFlags = JsonUtil.getInt(o.get("flags"));
+		int flags = JsonUtil.getInt(data.get("flags"));
+		applicationInfo = new ApplicationInfo(id, name, icon, description, summary, hook, bot_public, bot_require_code_grant,
+				verify_key, owner_id, username, avatar, discriminator, public_flags, ownerFlags, flags);
 		try {
 			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
 		} catch (Exception ex) {}
