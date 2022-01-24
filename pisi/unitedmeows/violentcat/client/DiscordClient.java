@@ -227,13 +227,15 @@ public class DiscordClient {
 	public Action<Boolean> createSlashCommand(SlashCommandCreator commandCreator) {
 
 		Action<Boolean> action = new Action<Boolean>(discordActionPool(), Action.MajorParameter.APPLICATION_ID,
-				String.valueOf("931180407699959878")) {
+				applicationInfo.id()) {
 			@Override
 			public void run() {
 				Gson gson = new Gson();
 				String json = gson.toJson(commandCreator.json());
-				String result = webClient.postRequest("https://discord.com/api/v9/applications/931180407699959878/commands", json);
-				end(true);
+				end( webClient.postRequest(
+						String.format("https://discord.com/api/v9/applications/%s/commands",
+								applicationInfo.id()), json)
+						!= null);
 			}
 		};
 		action.queue();

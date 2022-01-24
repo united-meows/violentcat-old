@@ -1,6 +1,7 @@
 package pisi.unitedmeows.violentcat.holders;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import pisi.unitedmeows.violentcat.action.Action;
@@ -8,6 +9,7 @@ import pisi.unitedmeows.violentcat.action.RequestType;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
 import pisi.unitedmeows.violentcat.holders.channel.Channel;
 import pisi.unitedmeows.violentcat.holders.channel.channels.*;
+import pisi.unitedmeows.violentcat.slashcmd.SlashCommandCreator;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.utils.Iterate;
 import java.util.ArrayList;
@@ -168,8 +170,6 @@ public class Guild {
         return channels;
     }
 
-
-
     public <X extends TextChannel> Action<X> getTextChannel(String channelId) { return getChannel(channelId); }
     public <X extends TextChannel> Action<X> getTextChannel(String channelId, RequestType requestType)
     { return getChannel(channelId, requestType); }
@@ -223,6 +223,24 @@ public class Guild {
             }
         };
         client.discordActionPool().queue(action);
+        return action;
+    }
+
+
+    public Action<Boolean> createSlashCommand(SlashCommandCreator commandCreator) {
+        Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.GUILD_ID,
+                id()) {
+            @Override
+            public void run() {
+                Gson gson = new Gson();
+                String json = gson.toJson(commandCreator.json());
+                end( client.webClient().postRequest(
+                        String.format("https://discord.com/api/v9/applications/%s/guilds/%s/commands",
+                                client.applicationInfo().id(), id()), json)
+                        != null);
+            }
+        };
+        action.queue();
         return action;
     }
 

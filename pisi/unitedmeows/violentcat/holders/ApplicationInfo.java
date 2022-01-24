@@ -42,4 +42,52 @@ public class ApplicationInfo {
         ownerFlags = _ownerFlags;
         flags = _flags;
     }
+
+    public String id() {
+        return id;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public String icon() {
+        return icon;
+    }
+
+    public String description() {
+        return description;
+    }
+
+    public String summary() {
+        return summary;
+    }
+
+    public boolean hook() {
+        return hook;
+    }
+
+    public boolean isPublicBot() {
+        return bot_public;
+    }
+
+    public boolean isRequiredCodeGrant() {
+        return bot_require_code_grant;
+    }
+
+    public String verifyKey() {
+        return verify_key;
+    }
+
+    public int ownerFlags() {
+        return ownerFlags;
+    }
+
+    public int publicFlags() {
+        return public_flags;
+    }
+
+    public int flags() {
+        return flags;
+    }
 }

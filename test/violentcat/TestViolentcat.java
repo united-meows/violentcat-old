@@ -25,6 +25,7 @@ public class TestViolentcat {
 
 
 		Guild guild = discordClient.getGuild("931282703477784690").await();
+		guild.createSlashCommand(SlashCommandCreator.create().setName("violentcat").setDescription("bot api help info"));
 
 		kThread.sleep(100000);
 	}

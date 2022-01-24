@@ -33,7 +33,6 @@ public class Channel {
                 .build();
     }
 
-
     protected DiscordClient client;
 
     public Channel(DiscordClient _client, String _name, String _id, String _last_message_id, String _parent_id, String _topic, boolean _nsfw, Type _type) {
