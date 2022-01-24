@@ -73,9 +73,10 @@ public class DiscordClient {
 	}
 
 	public DiscordClient login(Capsule optional) {
-		//TODO: PARSE THIS AND SET TO 'ApplicationInfo' (modify it)
+/*		TODO: PARSE THIS AND SET TO 'ApplicationInfo' (modify it)
 		String result = webClient.downloadString("https://discord.com/api/v9/oauth2/applications/@me");
-		System.out.println(result);
+		System.out.println(result);*/
+
 		try {
 			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
 		} catch (Exception ex) {}
@@ -91,7 +92,7 @@ public class DiscordClient {
 
 	public DiscordClient setPresence(Presence _presence) {
 		presence = _presence;
-		if (clientGateway.isOpen()) {
+		if (clientGateway != null) {
 			clientGateway.send(new PresenceUpdateSignal(presence));
 		}
 		return this;
@@ -214,10 +215,7 @@ public class DiscordClient {
 			public void run() {
 				Gson gson = new Gson();
 				String json = gson.toJson(commandCreator.json());
-				System.out.println(json);
-				String result = webClient.postRequest(String.format("https://discord.com/api/v9/applications/%s/commands",
-						"931180407699959878"), json);
-				System.out.println(result);
+				String result = webClient.postRequest("https://discord.com/api/v9/applications/931180407699959878/commands", json);
 				end(true);
 			}
 		};

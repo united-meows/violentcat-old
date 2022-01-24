@@ -20,8 +20,7 @@ public class TestViolentcat {
 						Presence.playing("cats"));
 
 		discordClient.addListener(new TestListener());
-		discordClient.createSlashCommand(SlashCommandCreator.create().setName("test").
-				setDescription("Example test slash command"));
+
 
 
 
