@@ -1,8 +1,7 @@
 package test.violentcat;
 
-import com.google.gson.JsonObject;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
-import pisi.unitedmeows.violentcat.client.SelfClient;
+import pisi.unitedmeows.violentcat.client.selfclient.SelfClient;
 import pisi.unitedmeows.violentcat.holders.Guild;
 import pisi.unitedmeows.violentcat.holders.Presence;
 import pisi.unitedmeows.violentcat.slashcmd.SlashCommandCreator;
@@ -22,11 +21,10 @@ public class TestViolentcat {
 		discordClient.addListener(new TestListener());
 
 
-
-
 		Guild guild = discordClient.getGuild("931282703477784690").await();
-		guild.createSlashCommand(SlashCommandCreator.create().setName("violentcat").setDescription("bot api help info"));
 
+		guild.createSlashCommand(SlashCommandCreator.create().setName("vio").setDescription("vi ovio")).await();
+		guild.members();
 		kThread.sleep(100000);
 	}
 }

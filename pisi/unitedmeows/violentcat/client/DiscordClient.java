@@ -21,6 +21,7 @@ import pisi.unitedmeows.violentcat.slashcmd.SlashCommandCreator;
 import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.violentcat.user.DiscordUser;
 import pisi.unitedmeows.violentcat.user.SelfUser;
+import pisi.unitedmeows.violentcat.utils.GsonWrap;
 import pisi.unitedmeows.violentcat.utils.Intent;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.clazz.prop;
@@ -50,8 +51,8 @@ public class DiscordClient {
 
 	protected YWebClient webClient;
 	protected int intents = Intent.calculateBitmask(Intent.DIRECT_MESSAGES,
-			Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS, Intent.GUILD_BANS,
-			Intent.GUILDS);
+			Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS,
+			Intent.GUILDS, Intent.GUILD_MEMBERS);
 
 	protected static Cache<String, Guild> _GUILD_CACHE;
 
@@ -74,26 +75,12 @@ public class DiscordClient {
 
 	public DiscordClient login(Capsule optional) {
 		String result = webClient.downloadString("https://discord.com/api/v9/oauth2/applications/@me");
-		JsonObject data = new JsonParser().parse(result).getAsJsonObject();
-		JsonObject o = data.getAsJsonObject("owner");
-		String id = JsonUtil.getString(data.get("id"));
-		String name = JsonUtil.getString(data.get("name"));
-		String icon = JsonUtil.getString(data.get("icon"));
-		String description = JsonUtil.getString(data.get("description"));
-		String summary = JsonUtil.getString(data.get("summary"));
-		boolean hook = JsonUtil.getBoolean(data.get("hook"));
-		boolean bot_public = JsonUtil.getBoolean(data.get("bot_public"));
-		boolean bot_require_code_grant = JsonUtil.getBoolean(data.get("bot_require_code_grant"));
-		String verify_key = JsonUtil.getString(data.get("verify_key"));
-		String owner_id = JsonUtil.getString(o.get("id"));
-		String username = JsonUtil.getString(o.get("username"));
-		String avatar = JsonUtil.getString(o.get("avatar"));
-		String discriminator = JsonUtil.getString(o.get("discriminator"));
-		int public_flags = JsonUtil.getInt(o.get("public_flags"));
-		int ownerFlags = JsonUtil.getInt(o.get("flags"));
-		int flags = JsonUtil.getInt(data.get("flags"));
-		applicationInfo = new ApplicationInfo(id, name, icon, description, summary, hook, bot_public, bot_require_code_grant,
-				verify_key, owner_id, username, avatar, discriminator, public_flags, ownerFlags, flags);
+		applicationInfo = new GsonWrap<ApplicationInfo>(result) { }.build(); /* viserys :D */
+		System.out.println(applicationInfo);
+		if (applicationInfo == null) {
+
+			kThread.sleep(1000000);
+		}
 		try {
 			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
 		} catch (Exception ex) {}

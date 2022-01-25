@@ -1,4 +1,4 @@
-package pisi.unitedmeows.violentcat.client;
+package pisi.unitedmeows.violentcat.client.selfclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -5,6 +5,8 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.HeartbeatAckSignal;
+import pisi.unitedmeows.violentcat.client.selfclient.structs.PresenceUpdateStruct;
+import pisi.unitedmeows.violentcat.utils.GsonWrap;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.parallel.Async;
 import pisi.unitedmeows.yystal.parallel.Promise;
@@ -81,7 +83,8 @@ public class SelfClientGateway extends WebSocketClient {
 				break;
 			}
 			case "PRESENCE_UPDATE": {
-
+				PresenceUpdateStruct presenceUpdateStruct = new GsonWrap<PresenceUpdateStruct>(d) {}.build();
+				System.out.println(presenceUpdateStruct);
 				break;
 			}
 			case "MESSAGE_REACTION_ADD": {

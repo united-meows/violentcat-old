@@ -287,48 +287,59 @@ public class Guild {
         }
     }
 
+    public void members() {
+        String result = client.webClient().downloadString(String.format("https://discord.com/api/v9/guilds/%s/members", id()));
+        JsonArray array = new JsonParser().parse(result).getAsJsonArray();
+        
+        System.out.println(result);
+    }
+
+
+
     public String name() {
         return name;
     }
 
+
     @Override
     public String toString() {
-        return "Guild{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", icon='" + icon + '\'' +
-                ", desc='" + desc + '\'' +
-                ", splash='" + splash + '\'' +
-                ", discovery_splash='" + discovery_splash + '\'' +
-                ", banner='" + banner + '\'' +
-                ", ownerId='" + ownerId + '\'' +
-                ", applicationId='" + applicationId + '\'' +
-                ", region='" + region + '\'' +
-                ", afkChannelId='" + afkChannelId + '\'' +
-                ", afkTimeout=" + afkTimeout +
-                ", systemChannelId='" + systemChannelId + '\'' +
-                ", widgetEnabled=" + widgetEnabled +
-                ", widgetChannelId='" + widgetChannelId + '\'' +
-                ", verificationLevel=" + verificationLevel +
-                ", defaultMessageNotifications=" + defaultMessageNotifications +
-                ", mfaLevel=" + mfaLevel +
-                ", explicitContentFilter=" + explicitContentFilter +
-                ", maxPresences='" + maxPresences + '\'' +
-                ", maxMembers=" + maxMembers +
-                ", maxVideoChannelUsers=" + maxVideoChannelUsers +
-                ", vanityUrl='" + vanityUrl + '\'' +
-                ", premiumTier=" + premiumTier +
-                ", premiumSubscriptionCount=" + premiumSubscriptionCount +
-                ", systemChannelFlags=" + systemChannelFlags +
-                ", preferredLocale='" + preferredLocale + '\'' +
-                ", rulesChannelId='" + rulesChannelId + '\'' +
-                ", publicUpdatesChannelId='" + publicUpdatesChannelId + '\'' +
-                ", hubType='" + hubType + '\'' +
-                ", premiumProgressBarEnabled=" + premiumProgressBarEnabled +
-                ", nsfw=" + nsfw +
-                ", nsfwLevel=" + nsfwLevel +
-                ", client=" + client +
-                '}';
+        final StringBuffer sb = new StringBuffer("Guild{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", icon='").append(icon).append('\'');
+        sb.append(", desc='").append(desc).append('\'');
+        sb.append(", splash='").append(splash).append('\'');
+        sb.append(", discovery_splash='").append(discovery_splash).append('\'');
+        sb.append(", banner='").append(banner).append('\'');
+        sb.append(", ownerId='").append(ownerId).append('\'');
+        sb.append(", applicationId='").append(applicationId).append('\'');
+        sb.append(", region='").append(region).append('\'');
+        sb.append(", afkChannelId='").append(afkChannelId).append('\'');
+        sb.append(", afkTimeout=").append(afkTimeout);
+        sb.append(", systemChannelId='").append(systemChannelId).append('\'');
+        sb.append(", widgetEnabled=").append(widgetEnabled);
+        sb.append(", widgetChannelId='").append(widgetChannelId).append('\'');
+        sb.append(", verificationLevel=").append(verificationLevel);
+        sb.append(", defaultMessageNotifications=").append(defaultMessageNotifications);
+        sb.append(", mfaLevel=").append(mfaLevel);
+        sb.append(", explicitContentFilter=").append(explicitContentFilter);
+        sb.append(", maxPresences='").append(maxPresences).append('\'');
+        sb.append(", maxMembers=").append(maxMembers);
+        sb.append(", maxVideoChannelUsers=").append(maxVideoChannelUsers);
+        sb.append(", vanityUrl='").append(vanityUrl).append('\'');
+        sb.append(", premiumTier=").append(premiumTier);
+        sb.append(", premiumSubscriptionCount=").append(premiumSubscriptionCount);
+        sb.append(", systemChannelFlags=").append(systemChannelFlags);
+        sb.append(", preferredLocale='").append(preferredLocale).append('\'');
+        sb.append(", rulesChannelId='").append(rulesChannelId).append('\'');
+        sb.append(", publicUpdatesChannelId='").append(publicUpdatesChannelId).append('\'');
+        sb.append(", hubType='").append(hubType).append('\'');
+        sb.append(", premiumProgressBarEnabled=").append(premiumProgressBarEnabled);
+        sb.append(", nsfw=").append(nsfw);
+        sb.append(", nsfwLevel=").append(nsfwLevel);
+        sb.append(", client=").append(client);
+        sb.append('}');
+        return sb.toString();
     }
 
     public String id() {
