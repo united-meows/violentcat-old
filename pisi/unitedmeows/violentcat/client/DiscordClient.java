@@ -3,10 +3,7 @@ package pisi.unitedmeows.violentcat.client;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import pisi.unitedmeows.eventapi.system.BasicEventSystem;
 import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.action.DiscordActionPool;
@@ -76,11 +73,6 @@ public class DiscordClient {
 	public DiscordClient login(Capsule optional) {
 		String result = webClient.downloadString("https://discord.com/api/v9/oauth2/applications/@me");
 		applicationInfo = new GsonWrap<ApplicationInfo>(result) { }.build(); /* viserys :D */
-		System.out.println(applicationInfo);
-		if (applicationInfo == null) {
-
-			kThread.sleep(1000000);
-		}
 		try {
 			clientGateway = new DiscordClientGateway(this, new URI("wss://gateway.discord.gg/?v=9&encoding=json"));
 		} catch (Exception ex) {}
@@ -184,6 +176,17 @@ public class DiscordClient {
 		};
 		discordActionPool.queue(action);
 		return action;
+	}
+
+	public void slashCommands() {
+		JsonArray array = new JsonParser().parse(webClient.downloadString(
+				String.format("https://discord.com/api/v9/applications/%s/commands",
+						applicationInfo().id()))).getAsJsonArray();
+
+		for (JsonElement jsonElement : array) {
+			webClient.
+		}
+
 	}
 
 	public Action<DiscordUser> getUser(String id) {
