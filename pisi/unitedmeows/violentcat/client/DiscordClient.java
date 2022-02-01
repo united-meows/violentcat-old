@@ -184,7 +184,7 @@ public class DiscordClient {
 						applicationInfo().id()))).getAsJsonArray();
 
 		for (JsonElement jsonElement : array) {
-			webClient.
+		//	webClient.
 		}
 
 	}

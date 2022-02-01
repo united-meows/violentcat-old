@@ -121,6 +121,7 @@ public class Channel {
         return action;
     }
 
+
     public Action<Invite> getInvite() {
         Action<Invite> action = new Action<Invite>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, id) {
             @Override

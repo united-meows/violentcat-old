@@ -28,7 +28,7 @@ public class GuildMessage extends Message {
         Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, channelId) {
             @Override
             public void run() {
-                client.webClient().deleteRequest("https://discord.com/api/v9/channels/" + channelId + "/" + "messages/" + id);
+                client.webClient().deleteRequest("https://discord.com/api/v9/channels/" + channelId + "/messages/" + id);
                 end(true);
             }
         };
@@ -40,7 +40,19 @@ public class GuildMessage extends Message {
         Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, channelId) {
             @Override
             public void run() {
-                client.webClient().putRequest("https://discord.com/api/v9/channels/" + channelId + "/" + "pins/" + id, "true");
+                client.webClient().putRequest("https://discord.com/api/v9/channels/" + channelId + "/pins/" + id, "true");
+                end(true);
+            }
+        };
+        client.discordActionPool().queue(action);
+        return action;
+    }
+
+    public Action<Boolean> editMessage(String value) {
+        Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.CHANNEL_ID, channelId) {
+            @Override
+            public void run() {
+                client.webClient().patchRequest("https://discord.com/api/v9/channels/" + channelId + "/messages/" + id, value);
                 end(true);
             }
         };

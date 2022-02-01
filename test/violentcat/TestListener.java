@@ -8,10 +8,10 @@ public class TestListener {
 
 	public Listener<GuildMessageEvent> guildMessageEventListener = new Listener<>(event -> {
 		System.out.println("received event");
-		if (event.guildMessage().content().startsWith("!deletechannel")) {
-			TextChannel channel = event.guildMessage().textChannel().await();;
-			channel.sendMessage("deleting channel");
-			event.guildMessage().textChannel().await().deleteChannel();
+		if (event.guildMessage().content().startsWith("!edit")) {
+			TextChannel channel = event.guildMessage().textChannel().await();
+			event.guildMessage().editMessage();
+
 		}
 	});
 
