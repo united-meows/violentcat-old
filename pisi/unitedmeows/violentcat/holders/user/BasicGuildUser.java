@@ -1,5 +1,6 @@
 package pisi.unitedmeows.violentcat.holders.user;
 
+import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
 
 public class BasicGuildUser extends BasicUser
@@ -17,6 +18,5 @@ public class BasicGuildUser extends BasicUser
 		hoistedRole = _hoistedRole;
 		deaf = _deaf;
 	}
-
 
 }

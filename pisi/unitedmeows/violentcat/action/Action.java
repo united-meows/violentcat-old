@@ -1,13 +1,10 @@
 package pisi.unitedmeows.violentcat.action;
 
-import pisi.unitedmeows.violentcat.action.limit.RateLimit;
 import pisi.unitedmeows.violentcat.action.limit.RateListener;
 import pisi.unitedmeows.yystal.clazz.function;
 import pisi.unitedmeows.yystal.utils.Stopwatch;
 import pisi.unitedmeows.yystal.utils.kThread;
 
-import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class Action<Result> extends function {
@@ -33,7 +30,8 @@ public abstract class Action<Result> extends function {
 		timer.reset();
 	}
 
-	public void queue() {
+	@Deprecated
+	public void _queue() {
 		actionPool.queue(this);
 	}
 

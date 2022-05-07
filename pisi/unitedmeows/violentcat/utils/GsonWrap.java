@@ -29,10 +29,11 @@ public class GsonWrap<Result> {
 		Result result;
 		try {
 			result = (Result) type.newInstance();
+			result = (Result) builder.create().fromJson(jsonObject, result.getClass());
 		} catch (Exception ex) {
 			return null;
 		}
-		result = (Result) builder.create().fromJson(jsonObject, result.getClass());
+
 
 		return result;
 	}

@@ -3,8 +3,8 @@ package pisi.unitedmeows.violentcat.holders.message;
 import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.action.RequestType;
 import pisi.unitedmeows.violentcat.client.DiscordClient;
-import pisi.unitedmeows.violentcat.holders.BasicGuildInfo;
-import pisi.unitedmeows.violentcat.holders.Guild;
+import pisi.unitedmeows.violentcat.holders.guild.BasicGuildInfo;
+import pisi.unitedmeows.violentcat.holders.guild.Guild;
 import pisi.unitedmeows.violentcat.holders.channel.channels.TextChannel;
 import pisi.unitedmeows.violentcat.holders.user.BasicGuildUser;
 

@@ -51,6 +51,9 @@ public class Presence {
 	public static Presence watching(String message) {
 		return new Presence(null, Type.WATCHING, message);
 	}
+	public static Presence competing(String message) {
+		return new Presence(null, Type.COMPETING, message);
+	}
 	public static Presence mobile() {
 		return new Presence(Status.MOBILE, Type.NOTHING, YString.EMPTY_R);
 	}
@@ -76,6 +79,7 @@ public class Presence {
 		STREAMING(1),
 		LISTENING(2),
 		WATCHING(3),
+		COMPETING(5),
 		NOTHING(2173);
 
 		int id;

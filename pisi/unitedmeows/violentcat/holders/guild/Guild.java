@@ -1,6 +1,5 @@
-package pisi.unitedmeows.violentcat.holders;
+package pisi.unitedmeows.violentcat.holders.guild;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Guild {
+public class Guild extends BasicGuildInfo {
 
     protected String id;
     protected String name;
@@ -66,6 +65,7 @@ public class Guild {
                  int premiumSubscriptionCount, int systemChannelFlags, String preferredLocale,
                  String rulesChannelId, String publicUpdatesChannelId, String hubType,
                  boolean premiumProgressBarEnabled, boolean nsfw, int nsfwLevel) {
+        super(id, client);
         this.id = id;
         this.name = name;
         this.icon = icon;
@@ -163,7 +163,6 @@ public class Guild {
         return channels;
     }
 
-
     public List<Channel> channels() {
         List<Channel> channels = new ArrayList<>();
         channelsAsIterable(channels::add);
@@ -189,6 +188,7 @@ public class Guild {
     public <X extends CategoryChannel> Action<X> getCategory(String channelId) { return getChannel(channelId); }
     public <X extends CategoryChannel> Action<X> getCategory(String channelId, RequestType requestType)
     { return getChannel(channelId, requestType); }
+
 
 
     @SuppressWarnings("unchecked")
@@ -227,6 +227,10 @@ public class Guild {
     }
 
 
+
+
+
+
     public Action<Boolean> createSlashCommand(SlashCommandCreator commandCreator) {
         Action<Boolean> action = new Action<Boolean>(client.discordActionPool(), Action.MajorParameter.GUILD_ID,
                 id()) {
@@ -240,7 +244,7 @@ public class Guild {
                         != null);
             }
         };
-        action.queue();
+        action._queue();
         return action;
     }
 
@@ -342,7 +346,4 @@ public class Guild {
         return sb.toString();
     }
 
-    public String id() {
-        return id;
-    }
 }

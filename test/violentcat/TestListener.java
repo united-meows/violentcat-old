@@ -10,7 +10,6 @@ public class TestListener {
 		System.out.println("received event");
 		if (event.guildMessage().content().startsWith("!edit")) {
 			TextChannel channel = event.guildMessage().textChannel().await();
-			event.guildMessage().editMessage();
 
 		}
 	});

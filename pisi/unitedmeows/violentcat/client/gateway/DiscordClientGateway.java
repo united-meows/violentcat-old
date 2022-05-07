@@ -12,6 +12,8 @@ import pisi.unitedmeows.violentcat.client.gateway.signal.RegisterSignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
 import pisi.unitedmeows.violentcat.utils.Intent;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
+import pisi.unitedmeows.yystal.YYStal;
+import pisi.unitedmeows.yystal.logger.impl.YLogger;
 import pisi.unitedmeows.yystal.parallel.Promise;
 import pisi.unitedmeows.yystal.utils.Capsule;
 import pisi.unitedmeows.yystal.utils.Stopwatch;
@@ -25,6 +27,9 @@ import java.util.HashMap;
 import java.util.Queue;
 
 public class DiscordClientGateway extends WebSocketClient {
+
+	private static final YLogger logger = YYStal.createLogger(DiscordClientGateway.class, "GATEWAY")
+			.setColored(true);
 
 	protected static final int QUEUE_DELAY = 30;
 
@@ -72,7 +77,7 @@ public class DiscordClientGateway extends WebSocketClient {
 				capsule.getOrDefault("device", "violentcat"),
 				capsule.getOrDefault("largethreshold", -1),
 				capsule.getOrDefault("shards", null));
-		System.out.println(client.intents());
+		logger.debug("Logging with intent " + client.intents());
 		send(identifySignal);
 	}
 
@@ -96,7 +101,7 @@ public class DiscordClientGateway extends WebSocketClient {
 			if (!sendQueue.isEmpty()) {
 				Signal signal = sendQueue.poll();
 				String data = gson.toJson(signal.write(client));
-				System.out.println("SENDING >> " + data);
+				logger.debug("Sending >> " + data);
 				send(data);
 
 			}
@@ -120,8 +125,7 @@ public class DiscordClientGateway extends WebSocketClient {
 		if (signal != null) {
 			signal.read(client, data);
 		}
-
-		System.out.println("RECEIVED << " + s);
+		logger.info("Received << " + s);
 	}
 
 	public void close() {

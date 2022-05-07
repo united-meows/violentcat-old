@@ -2,18 +2,17 @@ package pisi.unitedmeows.violentcat.client;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.gson.*;
 import pisi.unitedmeows.eventapi.system.BasicEventSystem;
 import pisi.unitedmeows.violentcat.action.Action;
 import pisi.unitedmeows.violentcat.action.DiscordActionPool;
 import pisi.unitedmeows.violentcat.action.RequestType;
 import pisi.unitedmeows.violentcat.client.gateway.DiscordClientGateway;
-import pisi.unitedmeows.violentcat.client.gateway.signal.impl.IdentifySignal;
 import pisi.unitedmeows.violentcat.client.gateway.signal.impl.PresenceUpdateSignal;
 import pisi.unitedmeows.violentcat.holders.ApplicationInfo;
-import pisi.unitedmeows.violentcat.holders.Guild;
+import pisi.unitedmeows.violentcat.holders.guild.Guild;
 import pisi.unitedmeows.violentcat.holders.Presence;
+import pisi.unitedmeows.violentcat.holders.guild.GuildPreview;
 import pisi.unitedmeows.violentcat.slashcmd.SlashCommandCreator;
 import pisi.unitedmeows.violentcat.user.AccountType;
 import pisi.unitedmeows.violentcat.user.DiscordUser;
@@ -21,17 +20,14 @@ import pisi.unitedmeows.violentcat.user.SelfUser;
 import pisi.unitedmeows.violentcat.utils.GsonWrap;
 import pisi.unitedmeows.violentcat.utils.Intent;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
-import pisi.unitedmeows.yystal.clazz.prop;
 import pisi.unitedmeows.yystal.utils.Capsule;
 import pisi.unitedmeows.yystal.utils.kThread;
 import pisi.unitedmeows.yystal.web.YWebClient;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Duration;
 
 public class DiscordClient {
 
-	protected AccountType accountType;
 	protected String token;
 
 	protected DiscordClientGateway clientGateway;
@@ -51,16 +47,21 @@ public class DiscordClient {
 			Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS,
 			Intent.GUILDS, Intent.GUILD_MEMBERS);
 
+	protected static Cache<String, GuildPreview> _PREVIEW_CACHE;
+
 	protected static Cache<String, Guild> _GUILD_CACHE;
 
 	static {
 		_GUILD_CACHE = Caffeine.newBuilder().maximumSize(100)
 				.expireAfterWrite(Duration.ofMinutes(2))
 				.build();
+
+		_PREVIEW_CACHE = Caffeine.newBuilder().maximumSize(50)
+				.expireAfterWrite(Duration.ofMillis(2))
+				.build();
 	}
 
-	public DiscordClient(AccountType _accountType, String _token) {
-		accountType = _accountType;
+	public DiscordClient(String _token) {
 		token = _token;
 		webClient = createWebClient(token);
 		_self = this;
@@ -102,6 +103,30 @@ public class DiscordClient {
 		return getGuild(guildId, RequestType.CACHE_THEN_REQUEST);
 	}
 
+	public Action<GuildPreview> guildPreview(String guildId, RequestType requestType) {
+		Action<GuildPreview> action =  new Action<GuildPreview>(discordActionPool(), Action.MajorParameter.GUILD_ID,
+				guildId) {
+			@Override
+			public void run() {
+				if (requestType == RequestType.CACHE_THEN_REQUEST) {
+					final GuildPreview preview = _PREVIEW_CACHE.getIfPresent(guildId);
+					if (preview != null) {
+						endNoRate(preview);
+						return;
+					}
+				}
+				final GuildPreview guildPreview = new GsonWrap<GuildPreview>(webClient().downloadString(
+						String.format("https://discord.com/api/v9/guilds/%s/preview", guildId))) {}.build();
+				end(guildPreview);
+			}
+		};
+		action._queue();
+		return action;
+	}
+
+	public Action<GuildPreview> guildPreview(String guildId) {
+		return guildPreview(guildId, RequestType.CACHE_THEN_REQUEST);
+	}
 
 	/* add missing array elements */
 	public Action<Guild> getGuild(String guildId, final RequestType requestType) {
@@ -215,7 +240,6 @@ public class DiscordClient {
 
 	/* change to action<SlashCommand> */
 	public Action<Boolean> createSlashCommand(SlashCommandCreator commandCreator) {
-
 		Action<Boolean> action = new Action<Boolean>(discordActionPool(), Action.MajorParameter.APPLICATION_ID,
 				applicationInfo.id()) {
 			@Override
@@ -228,7 +252,7 @@ public class DiscordClient {
 						!= null);
 			}
 		};
-		action.queue();
+		action._queue();
 		return action;
 	}
 
@@ -298,7 +322,4 @@ public class DiscordClient {
 		return webClient;
 	}
 
-	public AccountType accountType() {
-		return accountType;
-	}
 }
