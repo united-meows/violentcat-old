@@ -4,8 +4,9 @@ import com.google.gson.*;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import pisi.unitedmeows.violentcat.client.gateway.signal.Signal;
-import pisi.unitedmeows.violentcat.client.gateway.signal.impl.HeartbeatAckSignal;
 import pisi.unitedmeows.violentcat.client.selfclient.structs.PresenceUpdateStruct;
+import pisi.unitedmeows.violentcat.client.selfclient.holders.SelfMessageCreate;
+import pisi.unitedmeows.violentcat.client.selfclient.holders.SelfMessageReactionAdd;
 import pisi.unitedmeows.violentcat.utils.GsonWrap;
 import pisi.unitedmeows.violentcat.utils.JsonUtil;
 import pisi.unitedmeows.yystal.parallel.Async;
@@ -88,11 +89,11 @@ public class SelfClientGateway extends WebSocketClient {
 				break;
 			}
 			case "MESSAGE_REACTION_ADD": {
-
+				SelfMessageReactionAdd messageReactionAdd = new GsonWrap<SelfMessageReactionAdd>(d) { }.build();
 				break;
 			}
 			case "MESSAGE_CREATE": {
-
+				SelfMessageCreate messageCreate = new GsonWrap<SelfMessageCreate>(d) { }.build();
 				break;
 			}
 		}

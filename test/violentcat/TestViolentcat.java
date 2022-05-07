@@ -17,7 +17,7 @@ public class TestViolentcat {
 		String tokenDecode = "T1RNeE1UZ3dOREEzTmprNU9UVTVPRGM0LlllQXJWUS50LVU0Qmh3cWxaZ0l0M0dkSWdaaXBfUGJ3ZVE=";
 
 
-		SelfClient selfClient = new SelfClient("");
+		SelfClient selfClient = new SelfClient("NjkxODU0NzQxNjM3OTU1Nzc0.YiOUBQ.j51kUkIpAYPInPdkjqXJB5S-758");
 		selfClient.login();
 
 //		DiscordClient discordClient = new DiscordClient(new String(Base64.getDecoder().decode(tokenDecode))).login();
